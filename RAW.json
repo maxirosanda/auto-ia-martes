@@ -1,0 +1,736 @@
+{
+  "name": "My workflow 3",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "",
+        "height": 272,
+        "width": 816,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -416,
+        -48
+      ],
+      "typeVersion": 1,
+      "id": "84dcd385-66b7-49c7-8ee5-d205071bff52",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "triggerOn": "specificFolder",
+        "folderToWatch": {
+          "__rl": true,
+          "value": "1cSSiOrbtQHjD1m8hmTmxFHKjA3a4mHex",
+          "mode": "id"
+        },
+        "event": "fileCreated",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDriveTrigger",
+      "typeVersion": 1,
+      "position": [
+        -368,
+        32
+      ],
+      "id": "0712db58-38bd-4469-8e20-8fade5ef785a",
+      "name": "Google Drive Trigger",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "Ow29lBh5LzrvowAM",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -192,
+        32
+      ],
+      "id": "42e4e034-6d59-4b2e-96ce-b2d8206114b8",
+      "name": "Download file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "Ow29lBh5LzrvowAM",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"userName\": \"{{ $json.lastModifyingUser.displayName }}\",\n  \"userEmail\":\"{{$json.lastModifyingUser.emailAddress}}\"\n  \"fileId\": \"{{$json.id}}\",\n  \"fileType\": \"{{ $binary.data.mimeType }}\",\n  \"fileName\":\"{{$json.name}}\"\n \n}",
+        "includeOtherFields": true,
+        "include": "except",
+        "excludeFields": "parents, lastModifyingUser, owners, permissions, spaces, capabilities, permissionIds, linkShareMetadata, downloadRestrictions, kind, id, name, mimeType, starred, trashed, explicitlyTrashed, version, webContentLink, webViewLink, iconLink, hasThumbnail, thumbnailLink, thumbnailVersion, viewedByMe, viewedByMeTime, createdTime, modifiedTime, modifiedByMeTime, modifiedByMe, shared, ownedByMe, viewersCanCopyContent, copyRequiresWriterPermission, writersCanShare, originalFilename, fullFileExtension, fileExtension, md5Checksum, sha1Checksum, sha256Checksum, size, quotaBytesUsed, headRevisionId, isAppAuthorized, inheritedPermissionsDisabled",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -16,
+        32
+      ],
+      "id": "cfdff50a-04a2-4070-953c-193ebc653691",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "1e67c12f-8ab5-4ed0-b5f9-a0cab62625b8",
+              "leftValue": "={{$json.fileType}}",
+              "rightValue": "spreadsheet",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        192,
+        32
+      ],
+      "id": "83859b7e-bd0a-4293-8c97-8aebc79186c8",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "height": 336,
+        "width": 1760,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        496,
+        288
+      ],
+      "typeVersion": 1,
+      "id": "add3b9ea-a877-44ae-b85e-0481d05ec21b",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://api.cloud.llamaindex.ai/api/parsing/upload",
+        "sendHeaders": true,
+        "specifyHeaders": "json",
+        "jsonHeaders": "{\n  \"Authorization\":\"Bearer llx-xtmRcXYUmHWu214091sZsigCh5211OuMZgZIZK25mOJcyG2I\"\n}",
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "parameterType": "formBinaryData",
+              "name": "file",
+              "inputDataFieldName": "data"
+            },
+            {
+              "name": "result_type",
+              "value": "markdown"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        576,
+        384
+      ],
+      "id": "6ad7abc8-078a-401a-b107-ed856d739e9b",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        784,
+        384
+      ],
+      "id": "29b80276-55e2-41ee-bf87-07094d48ef80",
+      "name": "Wait",
+      "webhookId": "9586c982-e446-4f81-acbd-fd3d1fce3d27"
+    },
+    {
+      "parameters": {
+        "url": "=https://api.cloud.llamaindex.ai/api/parsing/job/{{ $json.id }}",
+        "sendHeaders": true,
+        "specifyHeaders": "json",
+        "jsonHeaders": "{\n  \"Authorization\":\"Bearer llx-xtmRcXYUmHWu214091sZsigCh5211OuMZgZIZK25mOJcyG2I\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        992,
+        384
+      ],
+      "id": "314db6f2-bdd4-4ab2-aeea-0f5b66c795e9",
+      "name": "HTTP Request1"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "4e0e6b26-3766-485b-b200-a2fff1148672",
+              "leftValue": "={{$json.status}}",
+              "rightValue": "SUCCESS",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1200,
+        384
+      ],
+      "id": "2c39a533-cd0c-49d1-b154-0eaab538147b",
+      "name": "If1"
+    },
+    {
+      "parameters": {
+        "url": "=https://api.cloud.llamaindex.ai/api/parsing/job/{{$json.id}}/result/markdown",
+        "sendQuery": true,
+        "specifyQuery": "json",
+        "jsonQuery": "{\n  \"result_type\": \"markdown\"\n}",
+        "sendHeaders": true,
+        "specifyHeaders": "json",
+        "jsonHeaders": "{\n  \"Authorization\": \"Bearer llx-PeoxkkhOTleRBHzckT39CdyDhotLSprL3b4aSURPqzZTv2Rb\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        1424,
+        368
+      ],
+      "id": "8a3a8244-9ca8-41bf-8e8e-c75781605f5b",
+      "name": "HTTP Request2"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.5-flash",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.5-flash"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=You are a system that prepares documents for semantic search (RAG).\n\nYour task is to transform the input text into structured, high-quality chunks with metadata.\n\nOUTPUT FORMAT (STRICT):\nReturn a JSON array of objects. Each object must have:\n\n{\n  \"text\": \"string\",\n  \"source\": \"string\",\n  \"chunk_index\": number,\n  \"chunk_id\": string\n}\n\n- content: the cleaned and structured chunk text\n- source: a short identifier of the document (infer from context if not provided, otherwise use \"unknown\")\n- chunk_index: incremental index starting from 0\n- chunk_id: must be exactly source + \"_\" + chunk_index\n\nRULES:\n\n1. Each chunk must contain COMPLETE information.\n   - Minimum 3 sentences per chunk.\n   - Maximum ~150 words.\n\n2. DO NOT create small or meaningless chunks.\n   - Avoid titles alone.\n   - Avoid slogans, headers, or isolated phrases.\n\n3. NEVER create a chunk that is only a title, heading, label, or course name.\n   - If the text does not contain explanatory or actionable information, DISCARD it.\n\n4. Group related content into the same chunk.\n   - Merge paragraphs that belong to the same topic.\n\n5. Remove noise:\n   - Ignore branding, slogans, repeated headers, or irrelevant text.\n\n6. Preserve meaning:\n   - Do not lose important information.\n   - Keep explanations complete.\n\n7. Prefer fewer high-quality chunks over many small ones.\n\n8. Do NOT split sentences.\n   - Each chunk must start and end at natural sentence boundaries.\n\n9. Ignore:\n   - legal disclaimers\n   - institutional policies\n   - generic company descriptions\n\n10. Only include information that helps answer real user questions.\n\n11. Useful information includes:\n   - skills learned\n   - technologies used\n   - how something works\n   - steps, processes, or explanations\n   - outcomes, results, or capabilities\n\n12. Exclude vague or generic content such as:\n   - \"this course is constantly updated\"\n   - \"high quality experience\"\n   - \"designed for the modern world\"\n   - any generic marketing language\n\n13. Each chunk must be information-dense.\n   - Avoid chunks that are too general, repetitive, or low in informational value.\n\n14. Prioritize technical, educational, or explanatory content over descriptive or promotional text.\n\n15. If a chunk contains multiple distinct topics, split them into separate chunks.\n\n16. Avoid duplicate chunks:\n   - If multiple parts of the text repeat the same idea or phrase, include it only once.\n   - Do NOT generate semantically redundant chunks.\n\n17. Each chunk must provide UNIQUE value.\n   - If removing the chunk does not reduce the overall understanding, DISCARD it.\n\n18. Discard low-value text:\n   - Standalone titles\n   - Section names\n   - Navigation elements\n   - Repeated course names\n   - Any content shorter than 2 full sentences\n\n19. Metadata rules:\n   - chunk_index must increment sequentially (0, 1, 2, ...)\n   - source must be consistent across all chunks from the same input\n   - If a clear title, filename, or context exists, use it as source\n   - If not, use \"unknown\"\n   - chunk_id must follow: source + \"_\" + chunk_index\n\n20. Quality over quantity:\n   - It is better to return fewer chunks than to include low-quality ones.\n\n21. DO NOT include explanations outside the JSON.\n\nIMPORTANT:\n- Return ONLY valid JSON\n- Escape all quotes inside strings using \\\"\n- Do not include markdown (no ```json)\n\nReturn ONLY the JSON array.\n\nTEXT: {{ $json.markdown || $json.content }}"
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        1664,
+        368
+      ],
+      "id": "5813d357-b671-4ecc-a4ad-de0b0238ee0e",
+      "name": "Message a model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "tRxgmyLVAQ60FkFf",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// 1. Accedemos al texto generado por Gemini\nconst rawText = $json.content.parts[0].text;\n\n// 2. Parseamos el string a JSON real\nlet parsed;\n\ntry {\n  parsed = JSON.parse(rawText);\n} catch (error) {\n  throw new Error(\"Error parseando JSON: \" + error.message);\n}\n\n// 3. Convertimos al formato que n8n espera (array de items)\nreturn parsed.map(item => ({\n  json: {\n    text: item.text,\n    source: item.source,\n    chunk_index: item.chunk_index,\n    chunk_id: item.chunk_id\n  }\n}));"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2016,
+        368
+      ],
+      "id": "93910a3d-1028-41af-8910-9c41c88090e3",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "height": 400,
+        "width": 528,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2464,
+        192
+      ],
+      "typeVersion": 1,
+      "id": "dc8e2e1b-34e7-40e1-a65c-a9014799c0e1",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "mode": "insert",
+        "tableName": {
+          "__rl": true,
+          "value": "documents",
+          "mode": "list",
+          "cachedResultName": "documents"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
+      "typeVersion": 1.3,
+      "position": [
+        2624,
+        256
+      ],
+      "id": "eef9ac8b-6726-468f-91c6-08fb8f4ddbf9",
+      "name": "Supabase Vector Store",
+      "credentials": {
+        "supabaseApi": {
+          "id": "PFBqMDJbrduOpkWl",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-embedding-001"
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        2560,
+        432
+      ],
+      "id": "90b561ee-4417-44fd-b5e3-1507438be3e3",
+      "name": "Embeddings Google Gemini",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "tRxgmyLVAQ60FkFf",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonMode": "expressionData",
+        "jsonData": "={{$json.text}}",
+        "options": {
+          "metadata": {
+            "metadataValues": [
+              {
+                "name": "=source",
+                "value": "={{$json.source}}"
+              },
+              {
+                "name": "chunk_id",
+                "value": "={{ $json.chunk_id }}"
+              },
+              {
+                "name": "chunk_index",
+                "value": "={{ $json.chunk_index }}"
+              }
+            ]
+          }
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "typeVersion": 1.1,
+      "position": [
+        2752,
+        432
+      ],
+      "id": "8658a61f-e4ca-4300-b5cd-e9b3aec5d8d4",
+      "name": "Default Data Loader"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "height": 736,
+        "width": 1040
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -336,
+        -1056
+      ],
+      "typeVersion": 1,
+      "id": "e02ae333-f0de-4b1a-b2ee-609f03bd0f75",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        -160,
+        -896
+      ],
+      "id": "df22edb1-f258-4d75-a793-e22335ddb369",
+      "name": "When chat message received",
+      "webhookId": "1d2476ee-a3f6-49b1-83fb-113f08fd11ee"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        32,
+        -896
+      ],
+      "id": "8924e953-3f6a-4412-b2d7-94460d665dd0",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        32,
+        -720
+      ],
+      "id": "432950e1-b8c9-4c8b-8a45-09d949746fa5",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "tRxgmyLVAQ60FkFf",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "retrieve-as-tool",
+        "toolDescription": "Use this tool to retrieve relevant information about programming courses, including curriculum, modules, pricing, schedules, and target audience. \n\nAlways use this tool when the user asks about course details, content, enrollment, technologies (e.g., React, Next.js, Python), or any related information. \n\nRetrieve all relevant information needed to fully answer the question. If the user asks for lists (e.g., modules), return ALL relevant items.",
+        "tableName": {
+          "__rl": true,
+          "value": "documents",
+          "mode": "list",
+          "cachedResultName": "documents"
+        },
+        "topK": 35,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
+      "typeVersion": 1.3,
+      "position": [
+        320,
+        -720
+      ],
+      "id": "ba161f5e-cc96-417c-a9e7-15b1b23781ff",
+      "name": "Supabase Vector Store1",
+      "credentials": {
+        "supabaseApi": {
+          "id": "PFBqMDJbrduOpkWl",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-embedding-001"
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        320,
+        -560
+      ],
+      "id": "70e4886f-d41e-4369-82bd-bfec39e9b2f8",
+      "name": "Embeddings Google Gemini1",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "tRxgmyLVAQ60FkFf",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    }
+  ],
+  "pinData": {
+    "Message a model": [
+      {
+        "json": {
+          "content": {
+            "parts": [
+              {
+                "text": "[\n  {\n    \"text\": \"Este curso está diseñado para llevar tus habilidades de automatización al siguiente nivel, profundizando en la integración de IA avanzada dentro de ecosistemas automatizados. A lo largo de las unidades, aprenderás a optimizar flujos con APIs, logs y métricas, aplicar parametrización avanzada, y mantener sistemas observables y escalables. La experiencia de aprendizaje es híbrida, combinando encuentros prácticos en vivo con material teórico asincrónico que te permite adaptar el proceso a tu vida.\",\n    \"source\": \"Coderhouse_AI_Automation_Avanzado\",\n    \"chunk_index\": 0,\n    \"chunk_id\": \"Coderhouse_AI_Automation_Avanzado_0\"\n  },\n  {\n    \"text\": \"Además, explorarás el poder de la IA multimodal y del paradigma RAG (Retrieval-Augmented Generation) para conectar tus flujos con bases de conocimiento inteligentes y fuentes documentales. Aprenderás a crear pipelines de extracción, integrar modelos de texto, imagen, audio y video, y diseñar workflows con intervención humana (Human-in-the-Loop) capaces de evaluarse y auto-mejorarse con el tiempo, logrando soluciones realmente autónomas y confiables.\",\n    \"source\": \"Coderhouse_AI_Automation_Avanzado\",\n    \"chunk_index\": 1,\n    \"chunk_id\": \"Coderhouse_AI_Automation_Avanzado_1\"\n  },\n  {\n    \"text\": \"Al finalizar el curso podrás diseñar y optimizar flujos de automatización avanzados integrando IA, APIs y monitoreo con métricas y logs. También serás capaz de implementar bases de conocimiento y sistemas RAG para extraer, procesar y utilizar información de documentos complejos. Podrás integrar modelos multimodales (texto, imagen, audio y video) en flujos automatizados y plataformas como Make o N8N, y desarrollar workflows autoevaluables y mejorables, combinando IA con revisión humana para lograr sistemas más precisos y confiables.\",\n    \"source\": \"Coderhouse_AI_Automation_Avanzado\",\n    \"chunk_index\": 2,\n    \"chunk_id\": \"Coderhouse_AI_Automation_Avanzado_2\"\n  },\n  {\n    \"text\": \"El curso de AI Automation Avanzado se imparte en modalidad híbrida con una duración de 5 semanas, incluyendo dos clases en vivo por semana. El nivel de dificultad es avanzado y requiere una dedicación alta, estimada en un promedio de 6 horas de trabajo semanal por fuera de la cursada.\",\n    \"source\": \"Coderhouse_AI_Automation_Avanzado\",\n    \"chunk_index\": 3,\n    \"chunk_id\": \"Coderhouse_AI_Automation_Avanzado_3\"\n  },\n  {\n    \"text\": \"Para este curso, se recomienda haber realizado el curso de AI Automation o tener conocimientos básicos sobre herramientas de automatización como Make, Zapier o N8N, y conceptos de inteligencia artificial generativa como prompts o modelos de lenguaje. Los requisitos técnicos mínimos incluyen una computadora portátil o desktop con 2 GB de RAM y una buena conexión a internet; se recomiendan 8 GB de RAM.\",\n    \"source\": \"Coderhouse_AI_Automation_Avanzado\",\n    \"chunk_index\": 4,\n    \"chunk_id\": \"Coderhouse_AI_Automation_Avanzado_4\"\n  },\n  {\n    \"text\": \"La metodología de aprendizaje combina encuentros prácticos en vivo y material asincrónico, disponible en la plataforma de Coderhouse. Tendrás dos clases en vivo semanales de dos horas, donde se profundizará el contenido teórico con ejemplos y buenas prácticas. Adicionalmente, el material pre-grabado incluye lecturas, desafíos y actividades interactivas, que se sugiere realizar semanalmente antes de las clases en vivo. El aprendizaje se estructura alrededor de la elaboración progresiva de un proyecto integrador final mediante entregas parciales.\",\n    \"source\": \"Coderhouse_AI_Automation_Avanzado\",\n    \"chunk_index\": 5,\n    \"chunk_id\": \"Coderhouse_AI_Automation_Avanzado_5\"\n  },\n  {\n    \"text\": \"El Módulo 1 se enfoca en la profundización de Ecosistemas de Automatización. Se realizará una revisión práctica de la arquitectura de flujos, APIs, fallbacks y logging. También se explorará el estado del arte en automatización e IA aplicada, incluyendo nuevas herramientas y tendencias. Otros temas clave son la parametrización avanzada (temperatura, output schemas, few-shot) y el mantenimiento y observabilidad de workflows mediante logs, alertas y métricas.\",\n    \"source\": \"Coderhouse_AI_Automation_Avanzado\",\n    \"chunk_index\": 6,\n    \"chunk_id\": \"Coderhouse_AI_Automation_Avanzado_6\"\n  },\n  {\n    \"text\": \"El Módulo 2 cubre las Bases de Conocimiento y Extracción Inteligente de Documentos. Se ofrecerá una introducción práctica al paradigma RAG (Retrieval-Augmented Generation). Los fundamentos incluyen búsqueda semántica, embeddings, chunking y context engineering. Aprenderás a realizar parsing de documentos como PDFs, docx y pptx con LlamaCloud, y a diseñar pipelines de extracción y limpieza de información.\",\n    \"source\": \"Coderhouse_AI_Automation_Avanzado\",\n    \"chunk_index\": 7,\n    \"chunk_id\": \"Coderhouse_AI_Automation_Avanzado_7\"\n  },\n  {\n    \"text\": \"El Módulo 3 explora la IA multimodal, abordando cómo integrar texto, imagen, audio y video en el mismo flujo. Se analizarán casos de uso como el reconocimiento de imagen, análisis de voz y generación de resúmenes multimedia. Aprenderás a integrar modelos multimodales de plataformas como OpenAI, Anthropic y Gemini en herramientas como Make o N8N, con una puesta en práctica utilizando NotebookLM.\",\n    \"source\": \"Coderhouse_AI_Automation_Avanzado\",\n    \"chunk_index\": 8,\n    \"chunk_id\": \"Coderhouse_AI_Automation_Avanzado_8\"\n  },\n  {\n    \"text\": \"El Módulo 4 se centra en el diseño de Human-in-the-Loop (HITL), enseñando a combinar la IA con revisión o aprobación humana, incluyendo políticas de espera y fallbacks, y herramientas prácticas para HITL como bots y push notifications. El Módulo 5 aborda la evaluación de automatizaciones, cubriendo métricas de éxito, precisión y robustez, así como evaluaciones automáticas (evals e IA como jurado) e introducción a workflows auto-mejorables.\",\n    \"source\": \"Coderhouse_AI_Automation_Avanzado\",\n    \"chunk_index\": 9,\n    \"chunk_id\": \"Coderhouse_AI_Automation_Avanzado_9\"\n  }\n]"
+              }
+            ],
+            "role": "model"
+          },
+          "finishReason": "STOP",
+          "index": 0
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Google Drive Trigger": {
+      "main": [
+        [
+          {
+            "node": "Download file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download file": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [],
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request2": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Supabase Vector Store",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings Google Gemini": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Supabase Vector Store",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Default Data Loader": {
+      "ai_document": [
+        [
+          {
+            "node": "Supabase Vector Store",
+            "type": "ai_document",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supabase Vector Store1": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings Google Gemini1": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Supabase Vector Store1",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "35135298-c499-4ec9-82b6-a3c11ae61a04",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "25ccab8c23685f45ccd17100c334d560e69db00db022bd5173c690ce1e1f654b"
+  },
+  "id": "IQTHjX7vpH46g5Zm",
+  "tags": []
+}

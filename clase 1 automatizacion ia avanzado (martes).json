@@ -1,0 +1,729 @@
+{
+  "name": "clase 1 automatizacion ia avanzado",
+  "nodes": [
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api-medicina-automatizacion-ia-avanzada-auth-production.up.railway.app/api/patients",
+        "sendHeaders": true,
+        "specifyHeaders": "json",
+        "jsonHeaders": "={\n  \"Authorization\":\"Bearer {{$json.token}}\"\n}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"name\": \"{{$json.body.name}}\",\n  \"age\": {{$json.body.age}},\n  \"email\": \"{{$json.body.email}}\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        -496,
+        128
+      ],
+      "id": "c20acd5d-452b-4eda-9059-600534be926c",
+      "name": "HTTP Request",
+      "retryOnFail": true,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"status\":\"success\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        -64,
+        0
+      ],
+      "id": "ae40ac87-7070-451f-a0e5-7eeb719bbba4",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"status\": \"error\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        -64,
+        160
+      ],
+      "id": "e296862c-abad-4a30-bda4-66ff09ad5d1f",
+      "name": "Respond to Webhook1"
+    },
+    {
+      "parameters": {
+        "url": "https://api-medicina-automatizacion-ia-avanzada-auth-production.up.railway.app/api/patients",
+        "sendHeaders": true,
+        "specifyHeaders": "=json",
+        "headerParameters": {
+          "parameters": [
+            {}
+          ]
+        },
+        "jsonHeaders": "={\n  \"Authorization\":\"Bearer {{$json.token}}\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        -464,
+        416
+      ],
+      "id": "9517ebc3-0231-48ad-9598-9e4e27e1cba3",
+      "name": "HTTP Request1",
+      "retryOnFail": true,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"status\": \"error\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        -64,
+        560
+      ],
+      "id": "db70392a-e966-4ef3-a7f7-94f99d0a42a2",
+      "name": "Respond to Webhook3"
+    },
+    {
+      "parameters": {
+        "method": "DELETE",
+        "url": "=https://api-medicina-automatizacion-ia-avanzada-auth-production.up.railway.app/api/patients/{{ $json.params.id }}",
+        "sendHeaders": true,
+        "specifyHeaders": "json",
+        "jsonHeaders": "={\n  \"Authorization\": \"Bearer {{ $json.token }}\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        -656,
+        768
+      ],
+      "id": "bc3a4723-dca1-4d3a-a29b-60699a39d537",
+      "name": "HTTP Request2",
+      "retryOnFail": true,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"status\": \"success\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        -336,
+        720
+      ],
+      "id": "989defc4-cf8d-4b68-b9ca-0601b2369abc",
+      "name": "Respond to Webhook4"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"status\": \"error\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        -336,
+        928
+      ],
+      "id": "0247ba4f-db35-42b2-aead-5068eb5fd821",
+      "name": "Respond to Webhook5"
+    },
+    {
+      "parameters": {
+        "httpMethod": "PUT",
+        "path": "=patient-updated/:id",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -1040,
+        1136
+      ],
+      "id": "f9ebbcc8-53c2-4538-a20e-9372ffd6c262",
+      "name": "Webhook3",
+      "webhookId": "527c2029-a29b-4ddd-b5a2-53ea864d2168"
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "=https://api-medicina-automatizacion-ia-avanzada-production.up.railway.app/api/patients/{{ $json.params.id }}",
+        "sendHeaders": true,
+        "specifyHeaders": "json",
+        "jsonHeaders": "={\n  \"Authorization\":\"Bearer {{$json.token}}\"\n}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"name\": \"{{ $json.body.name }}\",\n  \"age\":{{ $json.body.age }},\n  \"email\":\"{{ $json.body.email }}\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        -608,
+        1136
+      ],
+      "id": "7d2a8946-456f-44b6-9be9-42719ba88caf",
+      "name": "HTTP Request3",
+      "retryOnFail": true,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        -320,
+        1120
+      ],
+      "id": "83e181b5-f8b2-4e57-91e1-2398e62c8be9",
+      "name": "Respond to Webhook6"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"status\": \"error\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        -320,
+        1312
+      ],
+      "id": "0a4327b3-0e0d-4427-b942-15f4295ad555",
+      "name": "Respond to Webhook7"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $('HTTP Request1').item.json.data }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        -64,
+        352
+      ],
+      "id": "ee9b1a59-ba0e-47c5-939b-9cb4a5daffa8",
+      "name": "Respond to Webhook9"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "patient-created",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -960,
+        128
+      ],
+      "id": "5f3c8643-8739-43c3-b958-ba267087cacc",
+      "name": "Guardar datos paciente",
+      "webhookId": "35a97207-c75c-4f44-8aef-f835290e8440"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api-medicina-automatizacion-ia-avanzada-auth-production.up.railway.app/api/auth/register",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"email\": \"{{$json.body.email}}\",\n   \"password\":\"{{ $json.body.password }}\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        -544,
+        -720
+      ],
+      "id": "65588299-d705-4bae-b00f-11a94e210e2c",
+      "name": "HTTP Request4",
+      "retryOnFail": true,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"status\": \"success\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        -192,
+        -896
+      ],
+      "id": "29993f9f-6ab2-4b14-9973-6480dbb702de",
+      "name": "Respond to Webhook2"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"status\": \"error\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        -192,
+        -704
+      ],
+      "id": "a1181719-632a-4a06-9760-f4030b03d8e2",
+      "name": "Respond to Webhook8"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api-medicina-automatizacion-ia-avanzada-auth-production.up.railway.app/api/auth/login",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"email\":\"{{$json.body.email}}\",\n   \"password\":\"{{ $json.body.password }}\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        -592,
+        -304
+      ],
+      "id": "ea79ca03-53a7-4e31-b807-bf930bc16c8f",
+      "name": "HTTP Request5",
+      "retryOnFail": true,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"status\": \"success\",\n  \"token\":\"{{$json.token}}\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        -16,
+        -512
+      ],
+      "id": "551bfe8f-aa94-4a51-a863-87f238d04df4",
+      "name": "Respond to Webhook10"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"status\": \"error\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        -112,
+        -272
+      ],
+      "id": "594c91ac-84cc-4ac9-903c-c3f4d7a84f66",
+      "name": "Respond to Webhook11"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "register",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -784,
+        -720
+      ],
+      "id": "d4996818-8803-4f31-b851-8b9d6bee11b8",
+      "name": "Register",
+      "webhookId": "24a0eb5d-acf1-4acc-a5cd-eeda583282a5"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "login",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -848,
+        -304
+      ],
+      "id": "6c46222b-2aae-4540-896e-6e99bff901dd",
+      "name": "Login",
+      "webhookId": "24a0eb5d-acf1-4acc-a5cd-eeda583282a5"
+    },
+    {
+      "parameters": {
+        "jsCode": "const data = $getWorkflowStaticData('global');\n\ndata.token = $json.token;\n\nreturn $json;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -240,
+        -464
+      ],
+      "id": "7f58c914-b5aa-4108-b612-b7940482d72a",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "jsCode": "const data = $getWorkflowStaticData('global');\n\nreturn {\n  token: data.token,\n  body:$json.body\n  };"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -704,
+        128
+      ],
+      "id": "13845bcd-445a-4aac-adcc-4fcd9f19a8ef",
+      "name": "Code in JavaScript1"
+    },
+    {
+      "parameters": {
+        "jsCode": "const data = $getWorkflowStaticData('global');\n\nreturn {\n  token: data.token,\n  body:$json.body\n  };"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -768,
+        464
+      ],
+      "id": "8b1263a8-982e-4395-b0c1-fc6fac724344",
+      "name": "Code in JavaScript2"
+    },
+    {
+      "parameters": {
+        "path": "patient",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -1040,
+        416
+      ],
+      "id": "e18d6de9-bc0c-4a28-97c6-f7a1343889ec",
+      "name": "Traer los pacientes",
+      "webhookId": "a78a6993-0a1e-487c-81f3-e34a55daefca"
+    },
+    {
+      "parameters": {
+        "httpMethod": "DELETE",
+        "path": "=patient-deleted/:id",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -1024,
+        768
+      ],
+      "id": "e3cc74ba-b9c4-4263-b137-f732a5f7f583",
+      "name": "Eliminar de base de datos paciente",
+      "webhookId": "527c2029-a29b-4ddd-b5a2-53ea864d2168"
+    },
+    {
+      "parameters": {
+        "jsCode": "const data = $getWorkflowStaticData('global');\n\nreturn {\n  token: data.token,\n  params:$json.params\n  };"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -848,
+        768
+      ],
+      "id": "f65fe89f-ca25-491d-ac13-15d6dbd4d8bd",
+      "name": "Code in JavaScript3"
+    },
+    {
+      "parameters": {
+        "jsCode": "const data = $getWorkflowStaticData('global');\n\nreturn {\n  token: data.token,\n  body:$json.body\n  };"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -816,
+        1136
+      ],
+      "id": "e2d29491-7f16-42f0-a58c-e41f5e7aa36c",
+      "name": "Code in JavaScript4"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond to Webhook1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook9",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond to Webhook3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request2": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook4",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond to Webhook5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook3": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request3": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook6",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond to Webhook7",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Guardar datos paciente": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request4": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond to Webhook8",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request5": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond to Webhook11",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Register": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Login": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Respond to Webhook10": {
+      "main": [
+        []
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook10",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript1": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Traer los pacientes": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript2": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Eliminar de base de datos paciente": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript3": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript4": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "eaae566e-2a87-4807-9b73-5d89e9e80240",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "ebfc07779e881079af17faac81d962223973272e3cf1634f896c98a74b2d0b32"
+  },
+  "id": "WMug0vK80ly3qngY",
+  "tags": []
+}

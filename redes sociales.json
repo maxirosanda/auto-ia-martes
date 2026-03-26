@@ -1,0 +1,668 @@
+{
+  "name": "My workflow 2",
+  "nodes": [
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.fileType }}",
+                    "rightValue": "spreadsheet",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    },
+                    "id": "afb59cae-ff7a-4b2f-bc56-22799141df0f"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Excel"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "6245ce3b-0b96-4a64-9120-c9430edb60e6",
+                    "leftValue": "={{ $json.fileType }}",
+                    "rightValue": "word",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Word"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "e6711572-7412-4882-b0ca-c7dccce97f6b",
+                    "leftValue": "={{ $json.fileType }}",
+                    "rightValue": "pdf",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Pdf"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "6dc20e4f-714c-4b51-999b-8cefe96ca95f",
+                    "leftValue": "={{ $json.fileType }}",
+                    "rightValue": "text",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Text"
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra"
+        }
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        -1040,
+        416
+      ],
+      "id": "4086a76d-ea4f-4f6d-97e1-d8ab37e28fd1",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "operation": "deleteFile",
+        "fileId": {
+          "__rl": true,
+          "value": "={{$json.id }}",
+          "mode": "id"
+        },
+        "options": {
+          "deletePermanently": true
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -144,
+        112
+      ],
+      "id": "3c347140-9a2f-4743-bee1-dc2f32b2a300",
+      "name": "Delete a file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "tSdwPi7eBV8SpBWC",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "triggerOn": "specificFolder",
+        "folderToWatch": {
+          "__rl": true,
+          "value": "1CHhAeDnysVknYlkzjc0t8WTIzzgXjQzP",
+          "mode": "id"
+        },
+        "event": "fileCreated",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDriveTrigger",
+      "typeVersion": 1,
+      "position": [
+        -1824,
+        528
+      ],
+      "id": "1d9f8b31-17a5-4e1f-b6bd-48472d203761",
+      "name": "Detector carga de archivo",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "tSdwPi7eBV8SpBWC",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"userName\": \"{{ $json.lastModifyingUser.displayName }}\",\n  \"userEmail\":\"{{$json.lastModifyingUser.emailAddress}}\"\n  \"fileId\": \"{{$json.id}}\",\n  \"fileType\": \"{{ $binary.data.mimeType }}\",\n  \"fileName\":\"{{$json.name}}\"\n \n}\n",
+        "includeOtherFields": true,
+        "include": "except",
+        "excludeFields": "parents, lastModifyingUser, owners, permissions, spaces, capabilities, permissionIds, linkShareMetadata, downloadRestrictions, kind, id, name, mimeType, starred, trashed, explicitlyTrashed, version, webContentLink, webViewLink, iconLink, hasThumbnail, thumbnailLink, thumbnailVersion, viewedByMe, viewedByMeTime, createdTime, modifiedTime, modifiedByMeTime, modifiedByMe, shared, ownedByMe, viewersCanCopyContent, copyRequiresWriterPermission, writersCanShare, originalFilename, fullFileExtension, fileExtension, md5Checksum, sha1Checksum, sha256Checksum, size, quotaBytesUsed, headRevisionId, isAppAuthorized, inheritedPermissionsDisabled",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1360,
+        528
+      ],
+      "id": "470e1dc4-7a7d-4d06-9d40-abdd9ea879cc",
+      "name": "Editor de Detector de carga de archivo"
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "options": {
+          "googleFileConversion": {
+            "conversion": {
+              "docsToFormat": "application/pdf",
+              "drawingsToFormat": "application/pdf",
+              "slidesToFormat": "application/pdf",
+              "sheetsToFormat": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -1616,
+        528
+      ],
+      "id": "3b0ca84d-7771-4ac7-8df9-333bd8498da7",
+      "name": "Descarga de archivo",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "tSdwPi7eBV8SpBWC",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.userEmail }}",
+        "subject": "Se cargo un archivo a la carpeta que no es valido ",
+        "emailType": "text",
+        "message": "=No se pudo analizar el archivo con id: {{$json.fileId}}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        -688,
+        944
+      ],
+      "id": "b888af1c-5d80-41a3-8d61-cf0f1809c52f",
+      "name": "Enviar mensaje de archivo no valido",
+      "webhookId": "93d06aa4-6976-49c2-9304-44494981251e",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "Q6oy8EuGP8vgbmli",
+          "name": "Gmail account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "text",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1.1,
+      "position": [
+        112,
+        960
+      ],
+      "id": "e02dcf2d-cdb7-4524-ad93-63c415e797c3",
+      "name": "Extraer text de archivo de texto plano"
+    },
+    {
+      "parameters": {
+        "operation": "pdf",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1.1,
+      "position": [
+        128,
+        592
+      ],
+      "id": "d5cc199a-1da4-4706-9fe6-bb4afe7085ca",
+      "name": "Extraer texto de archivo de pdf"
+    },
+    {
+      "parameters": {
+        "operation": "xlsx",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1.1,
+      "position": [
+        112,
+        -128
+      ],
+      "id": "f6f14f89-a3d1-4a2b-8f56-2a42cec495bd",
+      "name": "Extraer texto de archivo excel"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://www.googleapis.com/drive/v3/files/{{$json.fileId}}/copy",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "oAuth2Api",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "name",
+              "value": "={{ $json.fileId }}"
+            },
+            {
+              "name": "mimeType",
+              "value": "application/vnd.google-apps.document"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        -592,
+        368
+      ],
+      "id": "d09970f8-fd0b-4de7-b0c8-08ab23220d6e",
+      "name": "transformar word en documento de google",
+      "credentials": {
+        "oAuth2Api": {
+          "id": "J9SWnDIqBiOvQl9Y",
+          "name": "Unnamed credential"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.id}}",
+          "mode": "id"
+        },
+        "options": {
+          "googleFileConversion": {
+            "conversion": {
+              "docsToFormat": "application/pdf"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -368,
+        256
+      ],
+      "id": "ac6f2b4b-abc1-4dd5-aafb-e2de9e37d3ef",
+      "name": "Descarga de archivo documento de google",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "tSdwPi7eBV8SpBWC",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"userName\": \"{{ $('Detector carga de archivo').item.json.lastModifyingUser.displayName }}\",\n  \"userEmail\":\"{{$('Detector carga de archivo').item.json.lastModifyingUser.emailAddress}}\"\n  \"fileId\": \"{{$('Descarga de archivo').item.json.fileId}}\",\n  \"fileType\": \"{{ $('Descarga de archivo').item.json.fileType }}\",\n  \"fileName\":\"{{$('Descarga de archivo').item.json.fileName}}\"\n \n}",
+        "includeOtherFields": true,
+        "include": "except",
+        "excludeFields": "kind,id, name, mimeType",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -144,
+        336
+      ],
+      "id": "81fdddcd-c397-4fc4-836f-fe2466eb2f80",
+      "name": "Edit Fields",
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "operation": "pdf",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1.1,
+      "position": [
+        128,
+        208
+      ],
+      "id": "d4c6920d-74ef-483c-94e5-0f9c70f560cd",
+      "name": "Extraer texto de word"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.5-flash",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.5-flash"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Sos un experto en marketing digital y creación de contenido para redes sociales.\n\nVas a recibir un texto extraído de documentos. Tu tarea es analizarlo y generar contenido listo para publicar en diferentes plataformas.\n\nIMPORTANTE:\n- Respondé SIEMPRE en español.\n- No agregues explicaciones.\n- No hables como IA.\n- No incluyas texto fuera del formato solicitado.\n- El contenido debe ser claro, persuasivo y orientado a conversión.\n\nTEXTO DE ENTRADA:\n{{ $json.text }}\n\n---\n\nGenerá la salida en el siguiente FORMATO JSON válido:\n\n{\n  \"resumen\": \"Resumen breve del contenido en máximo 3 líneas\",\n\n  \"linkedin\": {\n    \"post\": \"Post profesional, claro y con tono educativo/persuasivo. Incluir saltos de línea y cierre con reflexión o pregunta.\",\n    \"hashtags\": [\"#hashtag1\", \"#hashtag2\", \"#hashtag3\", \"#hashtag4\", \"#hashtag5\"]\n  },\n\n  \"instagram\": {\n    \"caption\": \"Texto más emocional y cercano. Usar storytelling si aplica. Incluir llamado a la acción.\",\n    \"hashtags\": [\"#hashtag1\", \"#hashtag2\", \"#hashtag3\", \"#hashtag4\", \"#hashtag5\", \"#hashtag6\", \"#hashtag7\", \"#hashtag8\"]\n  },\n\n  \"twitter\": {\n    \"post\": \"Texto corto, directo e impactante (máximo 280 caracteres).\"\n  },\n\n  \"email\": {\n    \"subject\": \"Asunto atractivo y corto\",\n    \"body\": \"Email breve tipo newsletter, con introducción, desarrollo y cierre con call to action.\"\n  }\n}\n\n---\n\nREGLAS:\n- No rompas el formato JSON.\n- No agregues texto fuera del JSON.\n- Adaptá el tono según la red social.\n- Si el contenido es técnico, simplificalo sin perder valor.\n- Usá lenguaje natural (no robótico)."
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {
+          "maxOutputTokens": 5000,
+          "temperature": 0.5,
+          "topP": 1
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        496,
+        368
+      ],
+      "id": "4c5d0517-6156-4eea-8bf4-8a70e2625da7",
+      "name": "Message a model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "uiHIHNdxvpQN4oMQ",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "maxi_rosanda@hotmail.com",
+        "subject": "Hola este es el nuevo contenido para las redes sociales",
+        "message": "={{ $json.html }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        1008,
+        368
+      ],
+      "id": "2181eb87-98a2-49ca-8ec4-8cb2820185f6",
+      "name": "Send a message",
+      "webhookId": "2edebf45-12b0-43cf-bdbf-d31110966b3c",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "Pz0E89u4ot6BtCy5",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// 1. Obtener el texto crudo\nconst raw = $json.content.parts[0].text;\n\n// 2. Limpiar el markdown ```json ... ```\nconst cleaned = raw\n  .replace(/```json/g, \"\")\n  .replace(/```/g, \"\")\n  .trim();\n\n// 3. Convertir a objeto JSON\nconst data = JSON.parse(cleaned);\n\n// 4. Generar HTML\nconst html = `\n<!DOCTYPE html>\n<html>\n<head>\n  <style>\n    body {\n      font-family: Arial, sans-serif;\n      line-height: 1.6;\n      color: #333;\n    }\n    .container {\n      max-width: 600px;\n      margin: auto;\n      padding: 20px;\n    }\n    h1 {\n      color: #4CAF50;\n    }\n    .section {\n      margin-bottom: 20px;\n    }\n    .hashtags {\n      color: #1DA1F2;\n      font-size: 14px;\n    }\n    .box {\n      background: #f4f4f4;\n      padding: 15px;\n      border-radius: 8px;\n    }\n  </style>\n</head>\n<body>\n  <div class=\"container\">\n    \n    <h1>${data.email.subject}</h1>\n\n    <div class=\"section box\">\n      <p>${data.resumen}</p>\n    </div>\n\n    <div class=\"section\">\n      <h3>Email</h3>\n      <p>${data.email.body.replace(/\\n/g, \"<br>\")}</p>\n    </div>\n\n    <div class=\"section\">\n      <h3>LinkedIn</h3>\n      <p>${data.linkedin.post.replace(/\\n/g, \"<br>\")}</p>\n      <p class=\"hashtags\">${data.linkedin.hashtags.join(\" \")}</p>\n    </div>\n\n    <div class=\"section\">\n      <h3>Instagram</h3>\n      <p>${data.instagram.caption.replace(/\\n/g, \"<br>\")}</p>\n      <p class=\"hashtags\">${data.instagram.hashtags.join(\" \")}</p>\n    </div>\n\n    <div class=\"section\">\n      <h3>Twitter</h3>\n      <p>${data.twitter.post}</p>\n    </div>\n\n  </div>\n</body>\n</html>\n`;\n\n// 5. Devolver HTML listo\nreturn [\n  {\n    json: {\n      html: html,\n      subject: data.email.subject\n    }\n  }\n];;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        784,
+        368
+      ],
+      "id": "84040260-d311-4e2e-aa34-dbbf3b837a44",
+      "name": "Code in JavaScript"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Extraer texto de archivo excel",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "transformar word en documento de google",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Extraer texto de archivo de pdf",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Extraer text de archivo de texto plano",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Enviar mensaje de archivo no valido",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Detector carga de archivo": {
+      "main": [
+        [
+          {
+            "node": "Descarga de archivo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Editor de Detector de carga de archivo": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Descarga de archivo": {
+      "main": [
+        [
+          {
+            "node": "Editor de Detector de carga de archivo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "transformar word en documento de google": {
+      "main": [
+        [
+          {
+            "node": "Descarga de archivo documento de google",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Descarga de archivo documento de google": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Delete a file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Extraer texto de word",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete a file": {
+      "main": [
+        []
+      ]
+    },
+    "Extraer texto de archivo excel": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extraer texto de word": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extraer texto de archivo de pdf": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extraer text de archivo de texto plano": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "d68fcfcb-0514-43e5-9225-5f65bdf3f082",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "ebfc07779e881079af17faac81d962223973272e3cf1634f896c98a74b2d0b32"
+  },
+  "id": "L2v70ePXoIzf52EW",
+  "tags": []
+}
