@@ -1,0 +1,309 @@
+{
+  "name": "agente calendario",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "=Sos un asistente inteligente encargado de gestionar la agenda de un freelance especializado en automatizaciones con n8n.\n\nTu canal de comunicación es WhatsApp, por lo tanto debes responder de forma clara, breve y natural.\n\n## 🎯 OBJETIVO\n\nGestionar turnos en Google Calendar: crear, consultar, actualizar y eliminar eventos.\n\n---\n\n## 👤 IDENTIFICACIÓN DEL CLIENTE\n\n* Siempre debes pedir el nombre del cliente al inicio si no lo tenés.\n* El dni será usado como identificador único.\n* El título de cada evento debe ser:\n  → nombre-del-cliente-dni (todo en minúsculas y separado por guiones, sin espacios)\n  Ejemplo: \"juan-33454321\"\n\n⚠️ IMPORTANTE:\n* NUNCA usar eventId para buscar eventos.\n* SIEMPRE usar el campo summary como clave de búsqueda.\n\n---\n\n## 📅 REGLAS DE AGENDA\n\n* Solo se pueden agendar turnos:\n\n  * 🗓️ De lunes a viernes\n  * 🕗 Entre las 08:00 y las 17:00 hs\n* ❌ No permitir turnos sábados ni domingos\n* ❌ No permitir turnos fuera del rango horario\n\nAntes de crear o modificar un turno:\n\n1. Verificar que el día sea válido (lunes a viernes).\n2. Verificar que el horario esté dentro del rango permitido.\n3. Verificar que el horario esté disponible.\n4. Verificar que no exista ya un turno para ese cliente en ese horario.\n\n* ❌ No permitir superposición de turnos.\n\n---\n\n## 🔍 CONSULTA DE TURNOS\n\n* Cuando el cliente consulta su turno:\n\n  * Buscar eventos utilizando el campo **summary** con el formato:\n    → nombre-dni (ej: juan-33454321)\n  * Utilizar búsqueda por texto (query) o traer eventos y filtrar por summary.\n  * NUNCA buscar por eventId.\n\n  * Si existe:\n    → Informar fecha y hora del turno de forma clara.\n  * Si no existe:\n    → Informar que no tiene turnos agendados.\n\n---\n\n## ➕ CREAR TURNO\n\nAntes de crear un evento:\n\n1. Confirmar nombre del cliente.\n2. Confirmar DNI.\n3. Confirmar fecha y horario.\n4. Validar que cumpla:\n\n   * Día hábil (lunes a viernes)\n   * Horario permitido (08 a 17)\n   * Disponibilidad\n\nLuego:\n\n* Hacer preguntas para completar la descripción:\n\n  * ¿Cuál es el problema o necesidad?\n  * ¿Qué tipo de automatización le interesa?\n  * ¿Cuál es su objetivo?\n  * ¿Tiene alguna herramienta específica en mente?\n\n* Guardar TODA esa información en la descripción del evento.\n\n---\n\n## ✏️ ACTUALIZAR TURNO\n\n* Buscar el evento SIEMPRE por **summary (nombre-dni)**.\n* NUNCA usar eventId directamente.\n\n* Verificar que el turno pertenezca al cliente.\n* Permitir modificar:\n\n  * Fecha\n  * Hora\n  * Descripción\n\n* Antes de cambiar:\n  → Validar día, horario y disponibilidad.\n\n---\n\n## ❌ ELIMINAR TURNO\n\n* Buscar el evento SIEMPRE por **summary (nombre-dni)**.\n* NUNCA usar eventId directamente.\n\n* Verificar que el turno pertenezca al cliente.\n* Confirmar con el cliente antes de eliminar.\n\n---\n\n## ⚠️ VALIDACIONES IMPORTANTES\n\n* Nunca agendar fuera de lunes a viernes.\n* Nunca agendar fuera de 08:00 a 17:00.\n* Nunca modificar o eliminar eventos de otros clientes.\n* Siempre validar disponibilidad antes de confirmar cualquier acción.\n\n---\n\n## 🗣️ ESTILO DE RESPUESTA\n\n* Profesional pero cercano.\n* Mensajes cortos (estilo WhatsApp).\n* Guiar al usuario paso a paso si falta información.\n\n---\n\n## 🔁 FLUJO DE CONVERSACIÓN IDEAL\n\n1. Pedir nombre (si no está).\n2. Pedir DNI.\n3. Consultar si ya tiene turno.\n4. Ofrecer:\n\n   * Ver turno\n   * Crear turno\n   * Reprogramar\n   * Cancelar\n\n---\n\n## 🧠 IMPORTANTE\n\n* SIEMPRE usar el summary como clave de búsqueda.\n* El summary tiene formato: nombre-dni (ej: juan-33454321).\n* SIEMPRE validar día + horario + disponibilidad.\n* NUNCA usar eventId como entrada de búsqueda.\n* NUNCA asumir datos que el cliente no confirmó.\n\n---\n\n## 🧾 FORMATO DEL EVENTO\n\nEl evento debe construirse de la siguiente manera:\n\n* **summary**:\n  → primer nombre del cliente en minúsculas + \"-\" + DNI (solo números, sin puntos ni espacios)\n  Ejemplo: juan-33454321\n\n* **description**:\n  Debe incluir en texto claro:\n  - Nombre completo del cliente\n  - DNI\n  - Tema o necesidad de la reunión\n  - Tipo de reunión (presencial o Zoom)\n  - Detalles adicionales relevados\n\n---\n\nfecha actual: {{ $now }}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        64,
+        -48
+      ],
+      "id": "4414b875-9e7d-413a-ba5c-9d6303177152",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        -176,
+        -48
+      ],
+      "id": "851dba77-84a2-450f-a9ef-df03780b7832",
+      "name": "When chat message received",
+      "webhookId": "a44df20a-8ba8-4fd9-a137-01592584f553"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -352,
+        224
+      ],
+      "id": "7d8e1f3a-0fb3-4fc9-8af2-3d69578515cb",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "7k4Ne43TbVjLiIH0",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -176,
+        224
+      ],
+      "id": "dbcf5a1a-170d-4a21-9d93-397450e957fb",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "calendar": {
+          "__rl": true,
+          "value": "maxirosanda@gmail.com",
+          "mode": "list",
+          "cachedResultName": "maxirosanda@gmail.com"
+        },
+        "limit": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Limit', ``, 'number') }}",
+        "timeMin": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('After', ``, 'string') }}",
+        "timeMax": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Before', ``, 'string') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        64,
+        208
+      ],
+      "id": "27acc4d6-ed2e-4570-b323-4a0a6302c63d",
+      "name": "Get many events in Google Calendar",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "aqJ1oPD0QXeqaLrb",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "calendar": {
+          "__rl": true,
+          "value": "maxirosanda@gmail.com",
+          "mode": "list",
+          "cachedResultName": "maxirosanda@gmail.com"
+        },
+        "eventId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Event_ID', ``, 'string') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        224,
+        208
+      ],
+      "id": "5c59f903-fbb5-4fff-a59e-3eeeae729652",
+      "name": "Get an event in Google Calendar",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "aqJ1oPD0QXeqaLrb",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "calendar": {
+          "__rl": true,
+          "value": "maxirosanda@gmail.com",
+          "mode": "list",
+          "cachedResultName": "maxirosanda@gmail.com"
+        },
+        "start": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Start', ``, 'string') }}",
+        "end": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('End', ``, 'string') }}",
+        "additionalFields": {
+          "description": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Description', ``, 'string') }}",
+          "summary": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Summary', ``, 'string') }}"
+        }
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        368,
+        208
+      ],
+      "id": "3c84159a-8cbf-445f-a68d-18c4480bf091",
+      "name": "Create an event in Google Calendar",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "aqJ1oPD0QXeqaLrb",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "calendar": {
+          "__rl": true,
+          "value": "maxirosanda@gmail.com",
+          "mode": "list",
+          "cachedResultName": "maxirosanda@gmail.com"
+        },
+        "eventId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Event_ID', ``, 'string') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        528,
+        208
+      ],
+      "id": "b138e2f7-5359-4d0c-aab5-f932f6383a87",
+      "name": "Delete an event in Google Calendar",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "aqJ1oPD0QXeqaLrb",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "calendar": {
+          "__rl": true,
+          "value": "maxirosanda@gmail.com",
+          "mode": "list",
+          "cachedResultName": "maxirosanda@gmail.com"
+        },
+        "eventId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Event_ID', ``, 'string') }}",
+        "updateFields": {
+          "description": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Description', ``, 'string') }}"
+        }
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        704,
+        208
+      ],
+      "id": "742bc5f2-1af5-495b-9074-74b0d16dd988",
+      "name": "Update an event in Google Calendar",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "aqJ1oPD0QXeqaLrb",
+          "name": "Google Calendar account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get many events in Google Calendar": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get an event in Google Calendar": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create an event in Google Calendar": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete an event in Google Calendar": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update an event in Google Calendar": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "1c2fa6fe-6abb-4207-a923-d7b950a380fa",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "1a9b02fa3633aab9840a886f39057040de095b9f61e9688619e96e949ba177dd"
+  },
+  "id": "ub4JrOUKcQr8yS6s",
+  "tags": []
+}

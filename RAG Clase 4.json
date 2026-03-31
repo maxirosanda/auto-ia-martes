@@ -10,11 +10,11 @@
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        -416,
-        -48
+        112,
+        896
       ],
       "typeVersion": 1,
-      "id": "84dcd385-66b7-49c7-8ee5-d205071bff52",
+      "id": "3c1be49e-9a8e-4459-b6bc-10afa1394d23",
       "name": "Sticky Note"
     },
     {
@@ -38,14 +38,14 @@
       "type": "n8n-nodes-base.googleDriveTrigger",
       "typeVersion": 1,
       "position": [
-        -368,
-        32
+        192,
+        992
       ],
-      "id": "0712db58-38bd-4469-8e20-8fade5ef785a",
+      "id": "5bccd7e8-7cc3-46af-af1f-d9e34f385a58",
       "name": "Google Drive Trigger",
       "credentials": {
         "googleDriveOAuth2Api": {
-          "id": "Ow29lBh5LzrvowAM",
+          "id": "znXmy1wUJ289VZiM",
           "name": "Google Drive account"
         }
       }
@@ -55,7 +55,7 @@
         "operation": "download",
         "fileId": {
           "__rl": true,
-          "value": "={{ $json.id }}",
+          "value": "={{$json.id}}",
           "mode": "id"
         },
         "options": {}
@@ -63,14 +63,14 @@
       "type": "n8n-nodes-base.googleDrive",
       "typeVersion": 3,
       "position": [
-        -192,
-        32
+        368,
+        992
       ],
-      "id": "42e4e034-6d59-4b2e-96ce-b2d8206114b8",
+      "id": "126d4adf-51f4-4c6f-a291-e90f97048189",
       "name": "Download file",
       "credentials": {
         "googleDriveOAuth2Api": {
-          "id": "Ow29lBh5LzrvowAM",
+          "id": "znXmy1wUJ289VZiM",
           "name": "Google Drive account"
         }
       }
@@ -87,10 +87,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -16,
-        32
+        512,
+        992
       ],
-      "id": "cfdff50a-04a2-4070-953c-193ebc653691",
+      "id": "85fbfb25-0c0e-42f6-8b54-9dceb31025bb",
       "name": "Edit Fields"
     },
     {
@@ -109,7 +109,7 @@
               "rightValue": "spreadsheet",
               "operator": {
                 "type": "string",
-                "operation": "equals"
+                "operation": "contains"
               }
             }
           ],
@@ -120,10 +120,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
       "position": [
-        192,
-        32
+        672,
+        1008
       ],
-      "id": "83859b7e-bd0a-4293-8c97-8aebc79186c8",
+      "id": "6f34ea10-74e5-45b7-aabf-edd5ffcfb97a",
       "name": "If"
     },
     {
@@ -135,11 +135,11 @@
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        496,
-        288
+        1024,
+        1232
       ],
       "typeVersion": 1,
-      "id": "add3b9ea-a877-44ae-b85e-0481d05ec21b",
+      "id": "e782af8c-1ea2-4b60-8d59-a74de58d3844",
       "name": "Sticky Note1"
     },
     {
@@ -148,7 +148,7 @@
         "url": "=https://api.cloud.llamaindex.ai/api/parsing/upload",
         "sendHeaders": true,
         "specifyHeaders": "json",
-        "jsonHeaders": "{\n  \"Authorization\":\"Bearer llx-xtmRcXYUmHWu214091sZsigCh5211OuMZgZIZK25mOJcyG2I\"\n}",
+        "jsonHeaders": "{\n  \"Authorization\":\"Bearer llx-Fz8OJUBzIEiqwpjZzVioDfCH02AfYRaxgK7moORZ9z2EPBu1\"\n}",
         "sendBody": true,
         "contentType": "multipart-form-data",
         "bodyParameters": {
@@ -169,10 +169,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.4,
       "position": [
-        576,
-        384
+        1104,
+        1328
       ],
-      "id": "6ad7abc8-078a-401a-b107-ed856d739e9b",
+      "id": "aada416c-e79c-4840-b3b1-cb46294a8913",
       "name": "HTTP Request"
     },
     {
@@ -180,10 +180,10 @@
       "type": "n8n-nodes-base.wait",
       "typeVersion": 1.1,
       "position": [
-        784,
-        384
+        1312,
+        1328
       ],
-      "id": "29b80276-55e2-41ee-bf87-07094d48ef80",
+      "id": "aa49251e-b15f-4ed4-850a-a3eada169595",
       "name": "Wait",
       "webhookId": "9586c982-e446-4f81-acbd-fd3d1fce3d27"
     },
@@ -192,16 +192,16 @@
         "url": "=https://api.cloud.llamaindex.ai/api/parsing/job/{{ $json.id }}",
         "sendHeaders": true,
         "specifyHeaders": "json",
-        "jsonHeaders": "{\n  \"Authorization\":\"Bearer llx-xtmRcXYUmHWu214091sZsigCh5211OuMZgZIZK25mOJcyG2I\"\n}",
+        "jsonHeaders": "{\n  \"Authorization\":\"Bearer llx-Fz8OJUBzIEiqwpjZzVioDfCH02AfYRaxgK7moORZ9z2EPBu1\"\n}",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.4,
       "position": [
-        992,
-        384
+        1520,
+        1328
       ],
-      "id": "314db6f2-bdd4-4ab2-aeea-0f5b66c795e9",
+      "id": "6335c37c-3a5b-405b-9483-a072e766ab3b",
       "name": "HTTP Request1"
     },
     {
@@ -232,10 +232,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
       "position": [
-        1200,
-        384
+        1728,
+        1328
       ],
-      "id": "2c39a533-cd0c-49d1-b154-0eaab538147b",
+      "id": "7a526cb8-2017-42bf-9652-892a6d607d55",
       "name": "If1"
     },
     {
@@ -246,16 +246,16 @@
         "jsonQuery": "{\n  \"result_type\": \"markdown\"\n}",
         "sendHeaders": true,
         "specifyHeaders": "json",
-        "jsonHeaders": "{\n  \"Authorization\": \"Bearer llx-PeoxkkhOTleRBHzckT39CdyDhotLSprL3b4aSURPqzZTv2Rb\"\n}",
+        "jsonHeaders": "{\n  \"Authorization\": \"Bearer llx-Fz8OJUBzIEiqwpjZzVioDfCH02AfYRaxgK7moORZ9z2EPBu1\"\n}",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.4,
       "position": [
-        1424,
-        368
+        1952,
+        1312
       ],
-      "id": "8a3a8244-9ca8-41bf-8e8e-c75781605f5b",
+      "id": "89736187-64cb-4501-b28c-802151f66dc8",
       "name": "HTTP Request2"
     },
     {
@@ -279,14 +279,14 @@
       "type": "@n8n/n8n-nodes-langchain.googleGemini",
       "typeVersion": 1.1,
       "position": [
-        1664,
-        368
+        2208,
+        1312
       ],
-      "id": "5813d357-b671-4ecc-a4ad-de0b0238ee0e",
+      "id": "0239e508-76b8-413b-9342-e5590979a7ea",
       "name": "Message a model",
       "credentials": {
         "googlePalmApi": {
-          "id": "tRxgmyLVAQ60FkFf",
+          "id": "7k4Ne43TbVjLiIH0",
           "name": "Google Gemini(PaLM) Api account"
         }
       }
@@ -298,10 +298,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        2016,
-        368
+        2608,
+        1312
       ],
-      "id": "93910a3d-1028-41af-8910-9c41c88090e3",
+      "id": "cd22add2-2631-4d5c-a45b-ec5508871ed3",
       "name": "Code in JavaScript"
     },
     {
@@ -313,11 +313,11 @@
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        2464,
-        192
+        3024,
+        848
       ],
       "typeVersion": 1,
-      "id": "dc8e2e1b-34e7-40e1-a65c-a9014799c0e1",
+      "id": "7385bcc5-26fb-4f11-b16a-a4e59789474b",
       "name": "Sticky Note3"
     },
     {
@@ -334,14 +334,14 @@
       "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
       "typeVersion": 1.3,
       "position": [
-        2624,
-        256
+        3184,
+        912
       ],
-      "id": "eef9ac8b-6726-468f-91c6-08fb8f4ddbf9",
+      "id": "ef8628ce-0bdb-4b74-822a-e4232f88fa67",
       "name": "Supabase Vector Store",
       "credentials": {
         "supabaseApi": {
-          "id": "PFBqMDJbrduOpkWl",
+          "id": "0cZ6CKqheFT4PHU7",
           "name": "Supabase account"
         }
       }
@@ -353,14 +353,14 @@
       "type": "@n8n/n8n-nodes-langchain.embeddingsGoogleGemini",
       "typeVersion": 1,
       "position": [
-        2560,
-        432
+        3136,
+        1088
       ],
-      "id": "90b561ee-4417-44fd-b5e3-1507438be3e3",
+      "id": "27b98205-dfca-474b-bf09-dab39ada2c3d",
       "name": "Embeddings Google Gemini",
       "credentials": {
         "googlePalmApi": {
-          "id": "tRxgmyLVAQ60FkFf",
+          "id": "7k4Ne43TbVjLiIH0",
           "name": "Google Gemini(PaLM) Api account"
         }
       }
@@ -391,10 +391,10 @@
       "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
       "typeVersion": 1.1,
       "position": [
-        2752,
-        432
+        3328,
+        1104
       ],
-      "id": "8658a61f-e4ca-4300-b5cd-e9b3aec5d8d4",
+      "id": "98333d24-0d4b-4ab3-8ad3-d43424cd3e36",
       "name": "Default Data Loader"
     },
     {
@@ -405,11 +405,11 @@
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        -336,
-        -1056
+        192,
+        -112
       ],
       "typeVersion": 1,
-      "id": "e02ae333-f0de-4b1a-b2ee-609f03bd0f75",
+      "id": "adddfa1d-9eaf-4b79-831c-7bdf630f384b",
       "name": "Sticky Note2"
     },
     {
@@ -419,24 +419,26 @@
       "type": "@n8n/n8n-nodes-langchain.chatTrigger",
       "typeVersion": 1.4,
       "position": [
-        -160,
-        -896
+        368,
+        48
       ],
-      "id": "df22edb1-f258-4d75-a793-e22335ddb369",
+      "id": "783ce5d1-e6a5-4c1e-86d2-3a3e47d7b6c3",
       "name": "When chat message received",
       "webhookId": "1d2476ee-a3f6-49b1-83fb-113f08fd11ee"
     },
     {
       "parameters": {
-        "options": {}
+        "options": {
+          "systemMessage": "Sos un asistente especializado en cursos de programación y tecnología.\n\nTu objetivo es responder consultas de forma clara, breve y útil, mientras guiás la conversación para entender mejor al usuario.\n\nComportamiento:\n\n- Iniciá la conversación de forma amigable.\n- Preguntá el nombre del usuario si no lo sabés.\n- Hacé preguntas simples para entender qué está buscando (ej: qué quiere aprender, nivel, objetivo).\n- Mantené la conversación natural, como chat de WhatsApp.\n\nReglas:\n\n- Respondé siempre en español.\n- Sé breve y directo (máximo 3-5 oraciones por mensaje).\n- No des toda la información de golpe: guiá la conversación paso a paso.\n- Priorizá información concreta: contenido, tecnologías, duración, modalidad, requisitos y resultados.\n- No inventes información. Si no está en el contexto, decilo claramente.\n- Evitá lenguaje de marketing genérico.\n- No repitas la pregunta del usuario.\n- Si la consulta es ambigua, hacé una pregunta aclaratoria.\n- Adaptá la respuesta según lo que el usuario ya dijo.\n\nEstilo:\n\n- Cercano, claro y profesional.\n- Como un asesor humano, no como un robot.\n- Usá frases cortas.\n\nFormato de respuesta:\n\n- Texto simple, sin títulos ni markdown.\n- Máximo 3-5 oraciones.\n- Puede incluir 1 pregunta para continuar la conversación.\n\nContexto:\n\nUsá exclusivamente la información proporcionada en el contexto (RAG). No uses conocimiento externo."
+        }
       },
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 3.1,
       "position": [
-        32,
-        -896
+        560,
+        48
       ],
-      "id": "8924e953-3f6a-4412-b2d7-94460d665dd0",
+      "id": "3a725295-e6c4-4d2e-84be-a16ddc88773a",
       "name": "AI Agent"
     },
     {
@@ -446,14 +448,14 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
       "typeVersion": 1,
       "position": [
-        32,
-        -720
+        496,
+        272
       ],
-      "id": "432950e1-b8c9-4c8b-8a45-09d949746fa5",
+      "id": "1c822280-251c-458a-b6d1-c0f02f95d61e",
       "name": "Google Gemini Chat Model",
       "credentials": {
         "googlePalmApi": {
-          "id": "tRxgmyLVAQ60FkFf",
+          "id": "7k4Ne43TbVjLiIH0",
           "name": "Google Gemini(PaLM) Api account"
         }
       }
@@ -474,14 +476,14 @@
       "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
       "typeVersion": 1.3,
       "position": [
-        320,
-        -720
+        848,
+        224
       ],
-      "id": "ba161f5e-cc96-417c-a9e7-15b1b23781ff",
+      "id": "c2ec1ba5-4d3e-43dd-a835-522b71d1ed85",
       "name": "Supabase Vector Store1",
       "credentials": {
         "supabaseApi": {
-          "id": "PFBqMDJbrduOpkWl",
+          "id": "0cZ6CKqheFT4PHU7",
           "name": "Supabase account"
         }
       }
@@ -493,33 +495,117 @@
       "type": "@n8n/n8n-nodes-langchain.embeddingsGoogleGemini",
       "typeVersion": 1,
       "position": [
-        320,
-        -560
+        848,
+        384
       ],
-      "id": "70e4886f-d41e-4369-82bd-bfec39e9b2f8",
+      "id": "babece4c-ecc2-4b7e-984c-e9de2591321b",
       "name": "Embeddings Google Gemini1",
       "credentials": {
         "googlePalmApi": {
-          "id": "tRxgmyLVAQ60FkFf",
+          "id": "7k4Ne43TbVjLiIH0",
           "name": "Google Gemini(PaLM) Api account"
         }
       }
+    },
+    {
+      "parameters": {
+        "operation": "xlsx",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1.1,
+      "position": [
+        1728,
+        928
+      ],
+      "id": "d6662e1d-5d3c-4174-bd5b-31c61a6cd098",
+      "name": "Extract from File"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Datos del archivo (vienen del nodo Edit Fields)\nconst fileData = $items(\"Edit Fields\")[0].json;\n\n// Datos principales (los registros)\nconst data = items.map(i => i.json);\n\n// Fuente (podés cambiarlo si querés)\nconst source = fileData.fileName || \"unknown\";\n\n// Transformación\nreturn data.map((item, index) => {\n  \n  // Convertimos el objeto a texto clave:valor\n  const text = Object.entries(item)\n    .map(([key, value]) => `${key}: ${value}`)\n    .join(\", \");\n\n  return {\n    json: {\n      text,\n      source,\n      chunk_index: index,\n      chunk_id: `${source}_${index}`\n    }\n  };\n});"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1952,
+        928
+      ],
+      "id": "59b1a800-c24b-4fb6-b487-2fd0b2edabad",
+      "name": "Code in JavaScript1"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "height": 320,
+        "width": 496
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1632,
+        832
+      ],
+      "typeVersion": 1,
+      "id": "4e8407e8-f500-41ca-a73e-16dbbba720ff",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        656,
+        272
+      ],
+      "id": "a7471758-e06e-45b7-84c0-60f44ed0c339",
+      "name": "Simple Memory"
     }
   ],
   "pinData": {
-    "Message a model": [
+    "Extract from File": [
       {
         "json": {
-          "content": {
-            "parts": [
-              {
-                "text": "[\n  {\n    \"text\": \"Este curso está diseñado para llevar tus habilidades de automatización al siguiente nivel, profundizando en la integración de IA avanzada dentro de ecosistemas automatizados. A lo largo de las unidades, aprenderás a optimizar flujos con APIs, logs y métricas, aplicar parametrización avanzada, y mantener sistemas observables y escalables. La experiencia de aprendizaje es híbrida, combinando encuentros prácticos en vivo con material teórico asincrónico que te permite adaptar el proceso a tu vida.\",\n    \"source\": \"Coderhouse_AI_Automation_Avanzado\",\n    \"chunk_index\": 0,\n    \"chunk_id\": \"Coderhouse_AI_Automation_Avanzado_0\"\n  },\n  {\n    \"text\": \"Además, explorarás el poder de la IA multimodal y del paradigma RAG (Retrieval-Augmented Generation) para conectar tus flujos con bases de conocimiento inteligentes y fuentes documentales. Aprenderás a crear pipelines de extracción, integrar modelos de texto, imagen, audio y video, y diseñar workflows con intervención humana (Human-in-the-Loop) capaces de evaluarse y auto-mejorarse con el tiempo, logrando soluciones realmente autónomas y confiables.\",\n    \"source\": \"Coderhouse_AI_Automation_Avanzado\",\n    \"chunk_index\": 1,\n    \"chunk_id\": \"Coderhouse_AI_Automation_Avanzado_1\"\n  },\n  {\n    \"text\": \"Al finalizar el curso podrás diseñar y optimizar flujos de automatización avanzados integrando IA, APIs y monitoreo con métricas y logs. También serás capaz de implementar bases de conocimiento y sistemas RAG para extraer, procesar y utilizar información de documentos complejos. Podrás integrar modelos multimodales (texto, imagen, audio y video) en flujos automatizados y plataformas como Make o N8N, y desarrollar workflows autoevaluables y mejorables, combinando IA con revisión humana para lograr sistemas más precisos y confiables.\",\n    \"source\": \"Coderhouse_AI_Automation_Avanzado\",\n    \"chunk_index\": 2,\n    \"chunk_id\": \"Coderhouse_AI_Automation_Avanzado_2\"\n  },\n  {\n    \"text\": \"El curso de AI Automation Avanzado se imparte en modalidad híbrida con una duración de 5 semanas, incluyendo dos clases en vivo por semana. El nivel de dificultad es avanzado y requiere una dedicación alta, estimada en un promedio de 6 horas de trabajo semanal por fuera de la cursada.\",\n    \"source\": \"Coderhouse_AI_Automation_Avanzado\",\n    \"chunk_index\": 3,\n    \"chunk_id\": \"Coderhouse_AI_Automation_Avanzado_3\"\n  },\n  {\n    \"text\": \"Para este curso, se recomienda haber realizado el curso de AI Automation o tener conocimientos básicos sobre herramientas de automatización como Make, Zapier o N8N, y conceptos de inteligencia artificial generativa como prompts o modelos de lenguaje. Los requisitos técnicos mínimos incluyen una computadora portátil o desktop con 2 GB de RAM y una buena conexión a internet; se recomiendan 8 GB de RAM.\",\n    \"source\": \"Coderhouse_AI_Automation_Avanzado\",\n    \"chunk_index\": 4,\n    \"chunk_id\": \"Coderhouse_AI_Automation_Avanzado_4\"\n  },\n  {\n    \"text\": \"La metodología de aprendizaje combina encuentros prácticos en vivo y material asincrónico, disponible en la plataforma de Coderhouse. Tendrás dos clases en vivo semanales de dos horas, donde se profundizará el contenido teórico con ejemplos y buenas prácticas. Adicionalmente, el material pre-grabado incluye lecturas, desafíos y actividades interactivas, que se sugiere realizar semanalmente antes de las clases en vivo. El aprendizaje se estructura alrededor de la elaboración progresiva de un proyecto integrador final mediante entregas parciales.\",\n    \"source\": \"Coderhouse_AI_Automation_Avanzado\",\n    \"chunk_index\": 5,\n    \"chunk_id\": \"Coderhouse_AI_Automation_Avanzado_5\"\n  },\n  {\n    \"text\": \"El Módulo 1 se enfoca en la profundización de Ecosistemas de Automatización. Se realizará una revisión práctica de la arquitectura de flujos, APIs, fallbacks y logging. También se explorará el estado del arte en automatización e IA aplicada, incluyendo nuevas herramientas y tendencias. Otros temas clave son la parametrización avanzada (temperatura, output schemas, few-shot) y el mantenimiento y observabilidad de workflows mediante logs, alertas y métricas.\",\n    \"source\": \"Coderhouse_AI_Automation_Avanzado\",\n    \"chunk_index\": 6,\n    \"chunk_id\": \"Coderhouse_AI_Automation_Avanzado_6\"\n  },\n  {\n    \"text\": \"El Módulo 2 cubre las Bases de Conocimiento y Extracción Inteligente de Documentos. Se ofrecerá una introducción práctica al paradigma RAG (Retrieval-Augmented Generation). Los fundamentos incluyen búsqueda semántica, embeddings, chunking y context engineering. Aprenderás a realizar parsing de documentos como PDFs, docx y pptx con LlamaCloud, y a diseñar pipelines de extracción y limpieza de información.\",\n    \"source\": \"Coderhouse_AI_Automation_Avanzado\",\n    \"chunk_index\": 7,\n    \"chunk_id\": \"Coderhouse_AI_Automation_Avanzado_7\"\n  },\n  {\n    \"text\": \"El Módulo 3 explora la IA multimodal, abordando cómo integrar texto, imagen, audio y video en el mismo flujo. Se analizarán casos de uso como el reconocimiento de imagen, análisis de voz y generación de resúmenes multimedia. Aprenderás a integrar modelos multimodales de plataformas como OpenAI, Anthropic y Gemini en herramientas como Make o N8N, con una puesta en práctica utilizando NotebookLM.\",\n    \"source\": \"Coderhouse_AI_Automation_Avanzado\",\n    \"chunk_index\": 8,\n    \"chunk_id\": \"Coderhouse_AI_Automation_Avanzado_8\"\n  },\n  {\n    \"text\": \"El Módulo 4 se centra en el diseño de Human-in-the-Loop (HITL), enseñando a combinar la IA con revisión o aprobación humana, incluyendo políticas de espera y fallbacks, y herramientas prácticas para HITL como bots y push notifications. El Módulo 5 aborda la evaluación de automatizaciones, cubriendo métricas de éxito, precisión y robustez, así como evaluaciones automáticas (evals e IA como jurado) e introducción a workflows auto-mejorables.\",\n    \"source\": \"Coderhouse_AI_Automation_Avanzado\",\n    \"chunk_index\": 9,\n    \"chunk_id\": \"Coderhouse_AI_Automation_Avanzado_9\"\n  }\n]"
-              }
-            ],
-            "role": "model"
-          },
-          "finishReason": "STOP",
-          "index": 0
+          "ID": 1,
+          "Nombre": "Ana",
+          "Edad": 29,
+          "Pais": "Argentina",
+          "IngresoMensual": 3200
+        }
+      },
+      {
+        "json": {
+          "ID": 2,
+          "Nombre": "Luis",
+          "Edad": 41,
+          "Pais": "Chile",
+          "IngresoMensual": 4100
+        }
+      },
+      {
+        "json": {
+          "ID": 3,
+          "Nombre": "María",
+          "Edad": 35,
+          "Pais": "México",
+          "IngresoMensual": 3800
+        }
+      },
+      {
+        "json": {
+          "ID": 4,
+          "Nombre": "Carlos",
+          "Edad": 50,
+          "Pais": "España",
+          "IngresoMensual": 4500
+        }
+      },
+      {
+        "json": {
+          "ID": 5,
+          "Nombre": "Lucía",
+          "Edad": 27,
+          "Pais": "Colombia",
+          "IngresoMensual": 2900
         }
       }
     ]
@@ -560,7 +646,13 @@
     },
     "If": {
       "main": [
-        [],
+        [
+          {
+            "node": "Extract from File",
+            "type": "main",
+            "index": 0
+          }
+        ],
         [
           {
             "node": "HTTP Request",
@@ -719,6 +811,39 @@
           }
         ]
       ]
+    },
+    "Extract from File": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript1": {
+      "main": [
+        [
+          {
+            "node": "Supabase Vector Store",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "active": true,
@@ -726,11 +851,11 @@
     "executionOrder": "v1",
     "binaryMode": "separate"
   },
-  "versionId": "35135298-c499-4ec9-82b6-a3c11ae61a04",
+  "versionId": "6fc94f44-a5f4-4ae9-b5b7-9017d81c5bba",
   "meta": {
     "templateCredsSetupCompleted": true,
-    "instanceId": "25ccab8c23685f45ccd17100c334d560e69db00db022bd5173c690ce1e1f654b"
+    "instanceId": "1a9b02fa3633aab9840a886f39057040de095b9f61e9688619e96e949ba177dd"
   },
-  "id": "IQTHjX7vpH46g5Zm",
+  "id": "7fcrMwRkFxYkn81v",
   "tags": []
 }

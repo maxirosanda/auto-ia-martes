@@ -1,0 +1,181 @@
+{
+  "name": "Respuesta por audio",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "c39c5e59-1eac-4c6b-8ac1-427405282be6",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -352,
+        -80
+      ],
+      "id": "6df3a8c2-433d-4a12-b8e8-0321b9b183db",
+      "name": "Webhook",
+      "webhookId": "c39c5e59-1eac-4c6b-8ac1-427405282be6"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent",
+        "sendQuery": true,
+        "specifyQuery": "json",
+        "jsonQuery": "{\n  \"key\":\"AIzaSyAXwhnVlSmSZBrGN8YTL06WLztTb5aKGZg\"\n}",
+        "sendHeaders": true,
+        "specifyHeaders": "json",
+        "jsonHeaders": "{\n  \"Content-Type\": \"application/json\"\n}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"contents\": [\n    {\n      \"parts\": [\n        {\n          \"text\": \"Transcribí este audio en español. Devolvé solo el texto.\"\n        },\n        {\n          \"inline_data\": {\n            \"mime_type\": \"audio/ogg\",\n            \"data\": \"{{ $json.data }}\"\n          }\n        }\n      ]\n    }\n  ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        16,
+        -80
+      ],
+      "id": "1756c46f-fc27-4314-83d0-0ead4bc7bba8",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "operation": "binaryToPropery",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1.1,
+      "position": [
+        -176,
+        -80
+      ],
+      "id": "a216e59d-f876-456d-8823-add042de15ad",
+      "name": "Extract from File"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{$json.candidates[0].content.parts[0].text}}",
+        "options": {
+          "systemMessage": "Sos un experto en automatización de procesos empresariales (n8n, IA, integraciones, APIs).\n\n\nTu objetivo:\n- Entender qué problema tiene\n- Responder de forma clara y profesional\n- Mostrar cómo podrías ayudar\n- Guiar la conversación hacia una posible reunión o siguiente paso\n\nReglas:\n- Español\n- Tono cercano pero profesional\n- Respuesta breve (máx 4-5 líneas)\n- Podés hacer preguntas si falta info\n- Enfocate en valor de negocio (ahorro de tiempo, eficiencia, automatización)\n\nRespondé solo el mensaje."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        224,
+        -80
+      ],
+      "id": "3239e5f4-8beb-46f8-8103-bbecb0b22ee3",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        224,
+        96
+      ],
+      "id": "5fec3b58-8446-4df3-ad04-598842345d07",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "7k4Ne43TbVjLiIH0",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"response\": {{ JSON.stringify($json.output)}}\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        576,
+        -80
+      ],
+      "id": "82fa98d5-ec85-4d84-829d-d45c3776ddc2",
+      "name": "Respond to Webhook"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Extract from File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "04d7249e-8452-4d6b-98af-c3fdf5ee030a",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "1a9b02fa3633aab9840a886f39057040de095b9f61e9688619e96e949ba177dd"
+  },
+  "id": "Bi7c5lXTtKSpa9uE",
+  "tags": []
+}
