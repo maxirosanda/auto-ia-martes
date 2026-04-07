@@ -1,0 +1,126 @@
+{
+  "name": "Multimodal generar imagenes",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "14bdb6cd-f16c-4073-ba44-9b13f82b50fd",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -224,
+        48
+      ],
+      "id": "38fd29da-6882-48cd-af66-4bdf4bef2c47",
+      "name": "Webhook",
+      "webhookId": "14bdb6cd-f16c-4073-ba44-9b13f82b50fd"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-image-preview:generateContent",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "specifyHeaders": "json",
+        "jsonHeaders": "{\n  \"Content-Type\": \"image/jpeg\"\n}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"contents\": [\n    {\n      \"parts\": [\n        {\n          \"text\": \"{{ $json.body.text }}\"\n        }\n      ]\n    }\n  ],\n  \"generationConfig\": {\n    \"responseModalities\": [\"IMAGE\"],\n    \"imageConfig\": {\n      \"aspectRatio\": \"16:9\",\n      \"imageSize\": \"1K\"\n    }\n  },\n  \"safetySettings\": [\n    {\n      \"category\": \"HARM_CATEGORY_HARASSMENT\",\n      \"threshold\": \"BLOCK_NONE\"\n    },\n    {\n      \"category\": \"HARM_CATEGORY_HATE_SPEECH\",\n      \"threshold\": \"BLOCK_NONE\"\n    },\n    {\n      \"category\": \"HARM_CATEGORY_SEXUALLY_EXPLICIT\",\n      \"threshold\": \"BLOCK_NONE\"\n    },\n    {\n      \"category\": \"HARM_CATEGORY_DANGEROUS_CONTENT\",\n      \"threshold\": \"BLOCK_NONE\"\n    }\n  ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        -16,
+        48
+      ],
+      "id": "f8d06992-845c-4a26-b5da-cc3d6637ce0e",
+      "name": "HTTP Request",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "L20BaNa9uOyvrsEB",
+          "name": "Header Auth Gemini"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Accedemos a la data de la respuesta (ajusta la ruta según tu JSON)\nconst base64Data = items[0].json.candidates[0].content.parts[0].inlineData.data;\nconst mimeType = items[0].json.candidates[0].content.parts[0].inlineData.mimeType || 'image/jpeg';\n\n// n8n requiere que devolvamos un array de objetos\nreturn [\n  {\n    json: items[0].json, // Mantenemos los datos originales por si los necesitas\n    binary: {\n      data: await this.helpers.prepareBinaryData(\n        Buffer.from(base64Data, 'base64'), // Convertimos la cadena a Buffer\n        'archivo_generado.jpg',           // Nombre opcional del archivo\n        mimeType                          // Tipo de archivo\n      ),\n    },\n  },\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        176,
+        48
+      ],
+      "id": "094f184b-0933-435d-ad79-317bb1d292d9",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "respondWith": "binary",
+        "responseDataSource": "set",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        320,
+        48
+      ],
+      "id": "e5ef74cd-9c6f-4113-96d4-c33ba4690cca",
+      "name": "Respond to Webhook"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "9e132d45-e8fa-4d33-be09-e13d810ec4ce",
+  "meta": {
+    "instanceId": "98611db8140f0447c39c8e56666f9a86ee6ca617237fbb551230c599687176fd"
+  },
+  "id": "bkUdJqhfvebFKfbu",
+  "tags": []
+}
