@@ -3,46 +3,6 @@
   "nodes": [
     {
       "parameters": {
-        "updates": [
-          "message"
-        ],
-        "additionalFields": {}
-      },
-      "type": "n8n-nodes-base.telegramTrigger",
-      "typeVersion": 1.2,
-      "position": [
-        -448,
-        -64
-      ],
-      "id": "e97a7612-1c91-4171-8dd9-3c3d1aed37cf",
-      "name": "Telegram Trigger",
-      "webhookId": "7daf78a3-5ea1-4ba3-a6a9-d94e6949e3f2",
-      "credentials": {
-        "telegramApi": {
-          "id": "AwaLw0egIbuWFv1A",
-          "name": "Telegram account"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "promptType": "define",
-        "text": "={{ $json.message.text }}",
-        "options": {
-          "systemMessage": "Genera un texto para una publicacion en twiter en base al texto en el prompt del user. solo quiero una opcion lista para publicar no me hagas decidir a mi "
-        }
-      },
-      "type": "@n8n/n8n-nodes-langchain.agent",
-      "typeVersion": 3.1,
-      "position": [
-        -224,
-        -64
-      ],
-      "id": "a557b1bd-8a65-483d-adef-ccaa872f7a47",
-      "name": "AI Agent"
-    },
-    {
-      "parameters": {
         "options": {}
       },
       "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
@@ -62,135 +22,13 @@
     },
     {
       "parameters": {
-        "operation": "sendAndWait",
-        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
-        "message": "=este es el posteo esta bien\n{{$json.post}}",
-        "approvalOptions": {
-          "values": {
-            "approvalType": "double"
-          }
-        },
-        "options": {
-          "limitWaitTime": {
-            "values": {
-              "resumeUnit": "minutes"
-            }
-          }
-        }
-      },
-      "type": "n8n-nodes-base.telegram",
-      "typeVersion": 1.2,
-      "position": [
-        336,
-        -64
-      ],
-      "id": "0c2058ae-d813-4b58-9105-2bcb686df40d",
-      "name": "Send a text message",
-      "webhookId": "0230fa36-6f0a-4e16-acc8-f712929db971",
-      "credentials": {
-        "telegramApi": {
-          "id": "AwaLw0egIbuWFv1A",
-          "name": "Telegram account"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "method": "POST",
-        "url": "https://api.upload-post.com/api/upload_text",
-        "authentication": "genericCredentialType",
-        "genericAuthType": "httpHeaderAuth",
-        "sendBody": true,
-        "contentType": "multipart-form-data",
-        "bodyParameters": {
-          "parameters": [
-            {
-              "name": "user",
-              "value": "AutomatizacionesInteligentes"
-            },
-            {
-              "name": "title",
-              "value": "={{ $('AI Agent').item.json.output }}"
-            },
-            {
-              "name": "platform[]",
-              "value": "x"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.4,
-      "position": [
-        1328,
-        -176
-      ],
-      "id": "a3fdba70-103d-4582-b5ba-14a4b7e1db27",
-      "name": "HTTP Request",
-      "credentials": {
-        "httpHeaderAuth": {
-          "id": "YNYIxLjA1QEbfVsG",
-          "name": "Header Auth Upload Post"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "operation": "sendAndWait",
-        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
-        "message": "Que cambios queres hacer??",
-        "responseType": "freeText",
-        "options": {
-          "limitWaitTime": {
-            "values": {
-              "resumeUnit": "minutes"
-            }
-          }
-        }
-      },
-      "type": "n8n-nodes-base.telegram",
-      "typeVersion": 1.2,
-      "position": [
-        1024,
-        48
-      ],
-      "id": "2521ea6d-777b-43d6-a80d-04b8a1aa55d1",
-      "name": "Send a text message1",
-      "webhookId": "d15c93e1-6ac8-4351-8b2e-20840b751de7",
-      "credentials": {
-        "telegramApi": {
-          "id": "AwaLw0egIbuWFv1A",
-          "name": "Telegram account"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "promptType": "define",
-        "text": "=post: {{ $('AI Agent').item.json.output }}\ncorreccion: {{ $('Send a text message1').item.json.data.text }}",
-        "options": {
-          "systemMessage": "Sos un experto en redacción para redes sociales, especialmente X (Twitter).\n\nTu tarea es tomar:\n1. Un post original\n2. Una corrección o sugerencia\n\nY generar un nuevo post mejorado.\n\nReglas:\n- Aplicá SIEMPRE la corrección recibida\n- Mantené la idea principal del post original\n- Mejorá claridad, impacto y naturalidad\n- Hacelo más atractivo y fácil de leer\n- Máximo 280 caracteres\n- Evitá redundancias\n- Usá un tono directo, moderno y profesional\n- Si corresponde, agregá estructura (saltos de línea o bullets cortos)\n- NO expliques nada, solo devolvé el nuevo post\n- NO menciones la corrección ni el proceso\n\nSi la corrección implica un cambio conceptual fuerte, priorizá la corrección sobre el texto original."
-        }
-      },
-      "type": "@n8n/n8n-nodes-langchain.agent",
-      "typeVersion": 3.1,
-      "position": [
-        1600,
-        80
-      ],
-      "id": "6dea41e4-db69-4811-8e08-66cbf40e1dcd",
-      "name": "AI Agent1"
-    },
-    {
-      "parameters": {
         "options": {}
       },
       "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
       "typeVersion": 1,
       "position": [
-        1616,
-        384
+        1584,
+        352
       ],
       "id": "167e461b-aee5-44de-9f06-c28caa5b03c3",
       "name": "Google Gemini Chat Model1",
@@ -203,22 +41,7 @@
     },
     {
       "parameters": {
-        "mode": "raw",
-        "jsonOutput": "={\n  \"post\": \"{{$json.output}}\",\n}\n",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 3.4,
-      "position": [
-        128,
-        -64
-      ],
-      "id": "9b30e1e5-cb89-4932-8392-3d52668967a3",
-      "name": "Edit Fields"
-    },
-    {
-      "parameters": {
-        "content": "",
+        "content": "# Flujo Principal\n## Subir post a X generado por ia\n",
         "height": 800,
         "width": 2448
       },
@@ -789,74 +612,6 @@
     },
     {
       "parameters": {
-        "conditions": {
-          "options": {
-            "caseSensitive": true,
-            "leftValue": "",
-            "typeValidation": "strict",
-            "version": 3
-          },
-          "conditions": [
-            {
-              "id": "dc697746-b99d-401a-994d-7f68169a39af",
-              "leftValue": "={{$json.data.approved}}",
-              "rightValue": "",
-              "operator": {
-                "type": "boolean",
-                "operation": "true",
-                "singleValue": true
-              }
-            }
-          ],
-          "combinator": "and"
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.if",
-      "typeVersion": 2.3,
-      "position": [
-        864,
-        -64
-      ],
-      "id": "7b8941bd-8d11-456f-a4e2-c879f85c2649",
-      "name": "If3"
-    },
-    {
-      "parameters": {
-        "conditions": {
-          "options": {
-            "caseSensitive": true,
-            "leftValue": "",
-            "typeValidation": "strict",
-            "version": 3
-          },
-          "conditions": [
-            {
-              "id": "080f9d46-a156-4723-ae1d-66ba5d596f79",
-              "leftValue": "={{$json.post}}",
-              "rightValue": "",
-              "operator": {
-                "type": "string",
-                "operation": "exists",
-                "singleValue": true
-              }
-            }
-          ],
-          "combinator": "and"
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.if",
-      "typeVersion": 2.3,
-      "position": [
-        576,
-        -64
-      ],
-      "id": "d3c2b1dc-97a4-4e9b-b65b-bb2f750587f7",
-      "name": "If"
-    },
-    {
-      "parameters": {
         "operation": "sendAndWait",
         "sendTo": "maxi_rosanda@hotmail.com",
         "subject": "Aprobacion requerida",
@@ -872,7 +627,7 @@
       "typeVersion": 2.2,
       "position": [
         2480,
-        -1536
+        -1056
       ],
       "id": "84e7c8b8-9edf-4c3b-8e6b-0515e137ed9b",
       "name": "Send a message4",
@@ -900,7 +655,7 @@
             },
             {
               "name": "title",
-              "value": "={{ $('AI Agent').item.json.output }}"
+              "value": "={{ $('AI post para x (editor)').item.json.output }}"
             },
             {
               "name": "platform[]",
@@ -914,7 +669,7 @@
       "typeVersion": 4.4,
       "position": [
         3040,
-        -1760
+        -1280
       ],
       "id": "401ad9a9-4db5-42e6-be73-c51786c1a4a9",
       "name": "HTTP Request3",
@@ -928,7 +683,7 @@
     {
       "parameters": {
         "promptType": "define",
-        "text": "=post: {{ $('AI Agent').item.json.output }}\ncorreccion: {{ $('Send a message5').item.json.data.text }}",
+        "text": "=post: {{ $('AI post para x (editor)').item.json.output }}\ncorreccion: {{ $('Send a message5').item.json.data.text }}",
         "options": {
           "systemMessage": "Sos un experto en redacción para redes sociales, especialmente X (Twitter).\n\nTu tarea es tomar:\n1. Un post original\n2. Una corrección o sugerencia\n\nY generar un nuevo post mejorado.\n\nReglas:\n- Aplicá SIEMPRE la corrección recibida\n- Mantené la idea principal del post original\n- Mejorá claridad, impacto y naturalidad\n- Hacelo más atractivo y fácil de leer\n- Máximo 280 caracteres\n- Evitá redundancias\n- Usá un tono directo, moderno y profesional\n- Si corresponde, agregá estructura (saltos de línea o bullets cortos)\n- NO expliques nada, solo devolvé el nuevo post\n- NO menciones la corrección ni el proceso\n\nSi la corrección implica un cambio conceptual fuerte, priorizá la corrección sobre el texto original."
         }
@@ -937,7 +692,7 @@
       "typeVersion": 3.1,
       "position": [
         3296,
-        -1456
+        -976
       ],
       "id": "197a399b-931e-4e5e-9cdb-61a80ffcbf44",
       "name": "AI Agent6"
@@ -950,7 +705,7 @@
       "typeVersion": 1,
       "position": [
         3296,
-        -1248
+        -768
       ],
       "id": "91878c1e-a208-432e-a7fd-15b5771ca7f4",
       "name": "Google Gemini Chat Model6",
@@ -990,7 +745,7 @@
       "typeVersion": 2.3,
       "position": [
         2720,
-        -1536
+        -1056
       ],
       "id": "9e48ee64-e39c-4bd4-ba3e-4482c96c5624",
       "name": "If4"
@@ -1008,7 +763,7 @@
       "typeVersion": 2.2,
       "position": [
         3040,
-        -1456
+        -976
       ],
       "id": "042d06d8-853a-4b96-9dd2-fe565f4c5ba7",
       "name": "Send a message5",
@@ -1030,14 +785,14 @@
       "typeVersion": 3.4,
       "position": [
         3744,
-        -1456
+        -976
       ],
       "id": "d605a82a-fa45-458d-a2d0-785e5242cb2f",
       "name": "Edit Fields3"
     },
     {
       "parameters": {
-        "content": "",
+        "content": "# Revision de gerente\n## camino secundario",
         "height": 864,
         "width": 1728,
         "color": 3
@@ -1045,11 +800,198 @@
       "type": "n8n-nodes-base.stickyNote",
       "position": [
         2288,
-        -1872
+        -1392
       ],
       "typeVersion": 1,
       "id": "d78d7f0a-f2bb-48c2-aa16-62b9edd111d0",
       "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"post\": \"{{$json.output}}\",\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        112,
+        -64
+      ],
+      "id": "9b30e1e5-cb89-4932-8392-3d52668967a3",
+      "name": "Editar salida de las ia (Editor)"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.message.text }}",
+        "options": {
+          "systemMessage": "Genera un texto para una publicacion en twiter en base al texto en el prompt del user. solo quiero una opcion lista para publicar no me hagas decidir a mi "
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -224,
+        -64
+      ],
+      "id": "a557b1bd-8a65-483d-adef-ccaa872f7a47",
+      "name": "AI post para x (editor)"
+    },
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -448,
+        -64
+      ],
+      "id": "e97a7612-1c91-4171-8dd9-3c3d1aed37cf",
+      "name": "Disparador de flujo (Editor)",
+      "webhookId": "7daf78a3-5ea1-4ba3-a6a9-d94e6949e3f2",
+      "credentials": {
+        "telegramApi": {
+          "id": "AwaLw0egIbuWFv1A",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "080f9d46-a156-4723-ae1d-66ba5d596f79",
+              "leftValue": "={{$json.post}}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        576,
+        -64
+      ],
+      "id": "d3c2b1dc-97a4-4e9b-b65b-bb2f750587f7",
+      "name": "IF editor no responde (Editor)"
+    },
+    {
+      "parameters": {
+        "operation": "sendAndWait",
+        "chatId": "={{ $('Disparador de flujo (Editor)').item.json.message.chat.id }}",
+        "message": "=este es el posteo esta bien\n{{$json.post}}",
+        "approvalOptions": {
+          "values": {
+            "approvalType": "double"
+          }
+        },
+        "options": {
+          "limitWaitTime": {
+            "values": {
+              "resumeUnit": "minutes"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        336,
+        -64
+      ],
+      "id": "0c2058ae-d813-4b58-9105-2bcb686df40d",
+      "name": "Confirmar Post x (Editor)",
+      "webhookId": "0230fa36-6f0a-4e16-acc8-f712929db971",
+      "credentials": {
+        "telegramApi": {
+          "id": "AwaLw0egIbuWFv1A",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "dc697746-b99d-401a-994d-7f68169a39af",
+              "leftValue": "={{$json.data.approved}}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        864,
+        -64
+      ],
+      "id": "7b8941bd-8d11-456f-a4e2-c879f85c2649",
+      "name": "IF Post Aprobado (Editor)"
+    },
+    {
+      "parameters": {
+        "operation": "sendAndWait",
+        "chatId": "={{ $('Disparador de flujo (Editor)').item.json.message.chat.id }}",
+        "message": "Que cambios queres hacer??",
+        "responseType": "freeText",
+        "options": {
+          "limitWaitTime": {
+            "values": {
+              "resumeUnit": "minutes"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1088,
+        48
+      ],
+      "id": "2521ea6d-777b-43d6-a80d-04b8a1aa55d1",
+      "name": "Correccion (Editor)",
+      "webhookId": "d15c93e1-6ac8-4351-8b2e-20840b751de7",
+      "credentials": {
+        "telegramApi": {
+          "id": "AwaLw0egIbuWFv1A",
+          "name": "Telegram account"
+        }
+      }
     },
     {
       "parameters": {
@@ -1079,65 +1021,79 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
       "position": [
-        1296,
+        1312,
         48
       ],
       "id": "90e5738e-5a23-43f3-aae9-404973e66799",
-      "name": "If5"
+      "name": "If editor no envia correccion (Editor)"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.upload-post.com/api/upload_text",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "user",
+              "value": "AutomatizacionesInteligentes"
+            },
+            {
+              "name": "title",
+              "value": "={{ $('AI post para x (editor)').item.json.output }}"
+            },
+            {
+              "name": "platform[]",
+              "value": "x"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        1328,
+        -176
+      ],
+      "id": "a3fdba70-103d-4582-b5ba-14a4b7e1db27",
+      "name": "Subir post a X (Editor)",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "YNYIxLjA1QEbfVsG",
+          "name": "Header Auth Upload Post"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=post: {{ $('AI post para x (editor)').item.json.output }}\ncorreccion: {{ $('Correccion (Editor)').item.json.data.text }}",
+        "options": {
+          "systemMessage": "Sos un experto en redacción para redes sociales, especialmente X (Twitter).\n\nTu tarea es tomar:\n1. Un post original\n2. Una corrección o sugerencia\n\nY generar un nuevo post mejorado.\n\nReglas:\n- Aplicá SIEMPRE la corrección recibida\n- Mantené la idea principal del post original\n- Mejorá claridad, impacto y naturalidad\n- Hacelo más atractivo y fácil de leer\n- Máximo 280 caracteres\n- Evitá redundancias\n- Usá un tono directo, moderno y profesional\n- Si corresponde, agregá estructura (saltos de línea o bullets cortos)\n- NO expliques nada, solo devolvé el nuevo post\n- NO menciones la corrección ni el proceso\n\nSi la corrección implica un cambio conceptual fuerte, priorizá la corrección sobre el texto original."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        1600,
+        80
+      ],
+      "id": "6dea41e4-db69-4811-8e08-66cbf40e1dcd",
+      "name": "AI Correctora (Editor)"
     }
   ],
   "pinData": {},
   "connections": {
-    "Telegram Trigger": {
-      "main": [
-        [
-          {
-            "node": "AI Agent",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Google Gemini Chat Model": {
       "ai_languageModel": [
         [
           {
-            "node": "AI Agent",
+            "node": "AI post para x (editor)",
             "type": "ai_languageModel",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "AI Agent": {
-      "main": [
-        [
-          {
-            "node": "Edit Fields",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Send a text message": {
-      "main": [
-        [
-          {
-            "node": "If",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Send a text message1": {
-      "main": [
-        [
-          {
-            "node": "If5",
-            "type": "main",
             "index": 0
           }
         ]
@@ -1147,30 +1103,8 @@
       "ai_languageModel": [
         [
           {
-            "node": "AI Agent1",
+            "node": "AI Correctora (Editor)",
             "type": "ai_languageModel",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "AI Agent1": {
-      "main": [
-        [
-          {
-            "node": "Edit Fields",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Edit Fields": {
-      "main": [
-        [
-          {
-            "node": "Send a text message",
-            "type": "main",
             "index": 0
           }
         ]
@@ -1410,42 +1344,6 @@
         ]
       ]
     },
-    "If3": {
-      "main": [
-        [
-          {
-            "node": "HTTP Request",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "Send a text message1",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "If": {
-      "main": [
-        [
-          {
-            "node": "Send a message4",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "If3",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Google Gemini Chat Model6": {
       "ai_languageModel": [
         [
@@ -1519,7 +1417,40 @@
         ]
       ]
     },
-    "If5": {
+    "Editar salida de las ia (Editor)": {
+      "main": [
+        [
+          {
+            "node": "Confirmar Post x (Editor)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI post para x (editor)": {
+      "main": [
+        [
+          {
+            "node": "Editar salida de las ia (Editor)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Disparador de flujo (Editor)": {
+      "main": [
+        [
+          {
+            "node": "AI post para x (editor)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF editor no responde (Editor)": {
       "main": [
         [
           {
@@ -1530,7 +1461,76 @@
         ],
         [
           {
-            "node": "AI Agent1",
+            "node": "IF Post Aprobado (Editor)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Confirmar Post x (Editor)": {
+      "main": [
+        [
+          {
+            "node": "IF editor no responde (Editor)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF Post Aprobado (Editor)": {
+      "main": [
+        [
+          {
+            "node": "Subir post a X (Editor)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Correccion (Editor)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Correccion (Editor)": {
+      "main": [
+        [
+          {
+            "node": "If editor no envia correccion (Editor)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If editor no envia correccion (Editor)": {
+      "main": [
+        [
+          {
+            "node": "Send a message4",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "AI Correctora (Editor)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Correctora (Editor)": {
+      "main": [
+        [
+          {
+            "node": "Editar salida de las ia (Editor)",
             "type": "main",
             "index": 0
           }
@@ -1543,7 +1543,7 @@
     "executionOrder": "v1",
     "binaryMode": "separate"
   },
-  "versionId": "c63af521-d3ff-4c8c-ab8c-c233aa2aa4ed",
+  "versionId": "9a02ab05-1d77-42f4-b230-f957938a5304",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "98611db8140f0447c39c8e56666f9a86ee6ca617237fbb551230c599687176fd"
