@@ -1,0 +1,264 @@
+{
+  "name": "whatsapp",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "a0ef0945-8123-4902-85dc-3d2e1b226143",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -432,
+        -96
+      ],
+      "id": "4d0fbfc4-4bc2-4338-8f37-5d565844199d",
+      "name": "Webhook",
+      "webhookId": "a0ef0945-8123-4902-85dc-3d2e1b226143"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.body.messages[0].text.body }}",
+        "options": {
+          "systemMessage": "You are a helpful assistant"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        16,
+        -80
+      ],
+      "id": "acbbd582-62c6-4e86-9ae6-e25cebfe55d2",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -48,
+        160
+      ],
+      "id": "b4e3293f-c357-4b3d-a576-2bfd190191d2",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "rc3IIqpQcDKATvsl",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Webhook').item.json.body.messages[0].from }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        128,
+        176
+      ],
+      "id": "18b1f9ec-23cb-41ee-8076-ea3a06918333",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://gate.whapi.cloud/messages/text",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBearerAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"to\": \"{{$('Webhook').item.json.body.messages[0].from }}\",\n \"body\": {{ JSON.stringify($('Code in JavaScript').item.json.clean_output) }}\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        528,
+        -80
+      ],
+      "id": "83e1ccaf-79a7-4418-a30a-e91ef9d7bb37",
+      "name": "HTTP Request",
+      "credentials": {
+        "httpBearerAuth": {
+          "id": "F76XqYX74LScgICB",
+          "name": "Bearer Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "return items.map(item => {\n  const text = item.json.output || '';\n\n  return {\n    json: {\n      ...item.json,\n      clean_output: text.replace(/\\n+/g, ' ').trim()\n    }\n  };\n});"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        368,
+        -80
+      ],
+      "id": "d0e16309-bb1a-4694-854e-d9ea2bad9aae",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "8d76956d-4d3f-4cd8-afcc-99cd9962dc80",
+              "leftValue": "={{ $json.body.event.type }}",
+              "rightValue": "statuses",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -240,
+        -96
+      ],
+      "id": "f4e2c4ab-3cde-4ce8-9e4b-714ea1caf4db",
+      "name": "If"
+    }
+  ],
+  "pinData": {
+    "Webhook": [
+      {
+        "json": {
+          "headers": {
+            "host": "ebay-thrower-siren.ngrok-free.dev",
+            "content-length": "218",
+            "accept": "application/json",
+            "baggage": "sentry-environment=prod,sentry-public_key=22217dc31eef5d21afad60404664acb9,sentry-trace_id=d8e668a9853c4e659ced9698fdbc1d66",
+            "content-type": "application/json",
+            "sentry-trace": "d8e668a9853c4e659ced9698fdbc1d66-8c5815d7dc641d95",
+            "x-forwarded-for": "157.180.57.243",
+            "x-forwarded-host": "ebay-thrower-siren.ngrok-free.dev",
+            "x-forwarded-proto": "https",
+            "accept-encoding": "gzip"
+          },
+          "params": {},
+          "query": {},
+          "body": {
+            "statuses": [
+              {
+                "id": "PsriAABdolq5IPg-wNwE_oMg9fo",
+                "code": 4,
+                "status": "read",
+                "recipient_id": "5491168179706@s.whatsapp.net",
+                "timestamp": "1776383789"
+              }
+            ],
+            "event": {
+              "type": "statuses",
+              "event": "post"
+            },
+            "channel_id": "GRNLTR-QFMPX"
+          },
+          "webhookUrl": "https://ebay-thrower-siren.ngrok-free.dev/webhook/a0ef0945-8123-4902-85dc-3d2e1b226143",
+          "executionMode": "production"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [],
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "f2acc245-8348-444a-aeca-a77a5e8cfe21",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "c7b31977a1d8a788524451e091bfb2aa41fe01b91c4beac223ed036d4596a163"
+  },
+  "id": "EdRiySottRv2MMbr",
+  "tags": []
+}
