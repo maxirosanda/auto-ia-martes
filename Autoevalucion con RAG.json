@@ -504,7 +504,7 @@
       "type": "n8n-nodes-base.telegramTrigger",
       "typeVersion": 1.2,
       "position": [
-        -1760,
+        -2880,
         -1984
       ],
       "id": "000c5a72-c431-43f4-8fa9-2e3491b38668",
@@ -519,59 +519,13 @@
     },
     {
       "parameters": {
-        "mode": "load",
-        "tableName": {
-          "__rl": true,
-          "value": "documents",
-          "mode": "list",
-          "cachedResultName": "documents"
-        },
-        "prompt": "={{ $('Telegram Trigger').item.json.message.text }}",
-        "options": {}
-      },
-      "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
-      "typeVersion": 1.3,
-      "position": [
-        -1568,
-        -1984
-      ],
-      "id": "630dfd70-3f83-4979-94fb-cc5f7709cc9a",
-      "name": "Supabase Vector Store1",
-      "credentials": {
-        "supabaseApi": {
-          "id": "OvjqC2Nun5s5rjYS",
-          "name": "Supabase account"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "modelName": "models/gemini-embedding-001"
-      },
-      "type": "@n8n/n8n-nodes-langchain.embeddingsGoogleGemini",
-      "typeVersion": 1,
-      "position": [
-        -1552,
-        -1808
-      ],
-      "id": "f6d6383a-0c88-4542-a4c2-fad541b85a90",
-      "name": "Embeddings Google Gemini1",
-      "credentials": {
-        "googlePalmApi": {
-          "id": "rc3IIqpQcDKATvsl",
-          "name": "Google Gemini(PaLM) Api account"
-        }
-      }
-    },
-    {
-      "parameters": {
         "method": "POST",
         "url": "https://generativelanguage.googleapis.com/v1beta/models/gemini-embedding-001:embedContent",
         "authentication": "genericCredentialType",
         "genericAuthType": "httpHeaderAuth",
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"model\": \"models/gemini-embedding-001\",\n  \"content\": {\n    \"parts\": [{ \"text\": \"{{ $('Supabase Vector Store1').item.json.document.pageContent }}\" }]\n  }\n} ",
+        "jsonBody": "={\n  \"model\": \"models/gemini-embedding-001\",\n  \"content\": {\n    \"parts\": [{ \"text\": {{ JSON.stringify($('Supabase Vector Store2').item.json.document.pageContent) }} }]\n  }\n} ",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
@@ -599,8 +553,8 @@
       "type": "n8n-nodes-base.aggregate",
       "typeVersion": 1,
       "position": [
-        -1120,
-        -1984
+        -1040,
+        -2032
       ],
       "id": "3919f26f-f979-4c40-abe5-50556ade7388",
       "name": "Aggregate"
@@ -684,17 +638,6 @@
       "onError": "continueErrorOutput"
     },
     {
-      "parameters": {},
-      "type": "n8n-nodes-base.merge",
-      "typeVersion": 3.2,
-      "position": [
-        -128,
-        -1824
-      ],
-      "id": "e014d759-91c9-4405-abb6-ced8e539c10a",
-      "name": "Merge"
-    },
-    {
       "parameters": {
         "jsCode": "const globalData = $getWorkflowStaticData('global');\n\n// Inicializar si no existe\nif (!globalData.retries) {\n  globalData.retries = 0;\n}\n\n// Incrementar\nglobalData.retries += 1;\n\nreturn items.map(item => ({\n  json: {\n    ...item.json,\n    retries: globalData.retries\n  }\n}));"
       },
@@ -722,7 +665,7 @@
                 "conditions": [
                   {
                     "leftValue": "={{$('Code in JavaScript3').item.json.score}}",
-                    "rightValue": 0.98,
+                    "rightValue": 0.8,
                     "operator": {
                       "type": "number",
                       "operation": "gte"
@@ -776,7 +719,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const globalData = $getWorkflowStaticData('global');\n\nglobalData.retries = 0;\nglobalData.embeddings = [];\n\nreturn items.map(item => ({\n  json: {\n    ...item.json,\n    retries: globalData.retries\n  }\n}));"
+        "jsCode": "const globalData = $getWorkflowStaticData('global');\n\nglobalData.retries = 0;\n\nreturn items.map(item => ({\n  json: {\n    ...item.json,\n    retries: globalData.retries\n  }\n}));"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -811,7 +754,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const globalData = $getWorkflowStaticData('global');\n\nglobalData.retries = 0;\nglobalData.embeddings = [];\n\nreturn items.map(item => ({\n  json: {\n    ...item.json,\n    retries: globalData.retries\n  }\n}));"
+        "jsCode": "const globalData = $getWorkflowStaticData('global');\n\nglobalData.retries = 0;\n\nreturn items.map(item => ({\n  json: {\n    ...item.json,\n    retries: globalData.retries\n  }\n}));"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -847,7 +790,7 @@
     {
       "parameters": {
         "promptType": "define",
-        "text": "=Pregunta: {{ $('Telegram Trigger').item.json.message.text }}\n\nRespuesta a corregir: {{$('AI Agent').item.json.output}}\n\nfragmentos recuperados: {{ JSON.stringify($('Aggregate').item.json.data )}}",
+        "text": "=Pregunta: {{ $('Edit Fields1').item.json.text }}\n\nRespuesta a corregir: {{$('AI Agent').item.json.output}}\n\nfragmentos recuperados: {{ JSON.stringify($('Aggregate').item.json.data )}}",
         "options": {
           "systemMessage": "Sos un asistente experto en corrección de respuestas en sistemas RAG.\n\nTu tarea es generar una NUEVA RESPUESTA corregida y mejorada.\n\nRecibirás:\n- Una \"Respuesta original\" (que puede ser incorrecta o incompleta)\n- Una \"Pregunta\"\n- \"Chunks recuperados\" (fuente de verdad)\n\n--------------------------------------------------\nOBJETIVO\n--------------------------------------------------\n\nGenerar una respuesta NUEVA que:\n- Responda correctamente la pregunta\n- Esté basada SOLO en los chunks\n- Corrija errores de la respuesta original\n- Complete información faltante si es posible\n\n--------------------------------------------------\nREGLAS IMPORTANTES\n--------------------------------------------------\n\n1. Usá únicamente la información de los chunks.\n2. NO inventes datos.\n3. NO uses conocimiento externo.\n4. Ignorá completamente cualquier parte incorrecta de la respuesta original.\n5. Si la respuesta original es útil, podés mejorarla.\n6. Si la respuesta original es incorrecta, rehacela desde cero.\n7. Si no hay suficiente información en los chunks, respondé exactamente:\n   \"No se encontró información en el documento.\"\n\n--------------------------------------------------\nESTILO DE RESPUESTA\n--------------------------------------------------\n\n- Clara y directa\n- Bien estructurada\n- Podés usar viñetas si ayuda\n- En español\n- Sin mencionar los chunks ni el proceso\n\n\nDevolvé SOLO la respuesta final corregida."
         }
@@ -865,11 +808,11 @@
       "parameters": {
         "content": "\n",
         "height": 1520,
-        "width": 3312
+        "width": 3664
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        -1920,
+        -2272,
         -2496
       ],
       "typeVersion": 1,
@@ -926,25 +869,12 @@
     },
     {
       "parameters": {
-        "jsCode": "const globalData = $getWorkflowStaticData('global');\n\n// Asegurar estructura correcta (array)\nif (!Array.isArray(globalData.embeddings)) {\n  globalData.embeddings = [];\n}\n\n// Guardar (podés elegir push o replace)\n\n// OPCIÓN 1: reemplazar\nglobalData.embeddings = $input.all().map(\n  item => item.json.embedding.values\n);\n\n// OPCIÓN 2: acumular (más común en RAG)\n// globalData.embeddings.push(data);\n\nreturn $input.all();"
+        "jsCode": "// ===============================\n// 1. EMBEDDING DE RESPUESTA\n// ===============================\nconst responseEmbedding = $input.first().json.embedding.values;\n\nif (!responseEmbedding) {\n  throw new Error(\"No se encontró el embedding de la respuesta\");\n}\n\n// ===============================\n// 2. EMBEDDINGS DE FRAGMENTOS (HTTP Request3)\n// ===============================\nconst fragmentItems = $items(\"HTTP Request3\", 0, 0);\n\n// extraer embeddings\nconst fragmentEmbeddings = fragmentItems\n  .map(item => item.json.embedding?.values)\n  .filter(e => e && Array.isArray(e));\n\nif (fragmentEmbeddings.length === 0) {\n  throw new Error(\"No hay embeddings de fragmentos\");\n}\n\n// ===============================\n// 3. COSINE SIMILARITY\n// ===============================\nfunction cosineSimilarity(a, b) {\n  if (a.length !== b.length) return 0;\n\n  let dot = 0;\n  let normA = 0;\n  let normB = 0;\n\n  for (let i = 0; i < a.length; i++) {\n    dot += a[i] * b[i];\n    normA += a[i] * a[i];\n    normB += b[i] * b[i];\n  }\n\n  normA = Math.sqrt(normA);\n  normB = Math.sqrt(normB);\n\n  if (normA === 0 || normB === 0) return 0;\n\n  return dot / (normA * normB);\n}\n\n// ===============================\n// 4. CALCULAR SCORES\n// ===============================\nconst scores = fragmentEmbeddings.map(fragment => {\n  const sim = cosineSimilarity(responseEmbedding, fragment);\n\n  // normalizar de [-1,1] → [0,1]\n  const normalized = (sim + 1) / 2;\n\n  return normalized;\n});\n\n// ===============================\n// 5. MÉTRICAS\n// ===============================\nconst avgScore =\n  scores.reduce((acc, val) => acc + val, 0) / scores.length;\n\nconst maxScore = Math.max(...scores);\n\n// ===============================\n// 6. OUTPUT\n// ===============================\nreturn [\n  {\n    json: {\n      score: avgScore,        // score global\n      maxScore: maxScore,     // mejor match\n      scores: scores,         // detalle por fragmento\n      fragments: scores.length\n    }\n  }\n];"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -432,
-        -1536
-      ],
-      "id": "f68d432f-8f1e-4ad0-a762-c832607448bc",
-      "name": "Code in JavaScript6"
-    },
-    {
-      "parameters": {
-        "jsCode": "const globalData = $getWorkflowStaticData('global');\n\n// Validar embeddings guardados\nif (!globalData.embeddings || !Array.isArray(globalData.embeddings)) {\n  throw new Error('No hay embeddings en memoria global');\n}\n\n// Obtener embedding de la pregunta (primer item del input)\nconst queryEmbedding = $input.first().json.embedding.values;\n\n// Embeddings de los fragmentos guardados\nconst storedEmbeddings = globalData.embeddings;\n\n// Función cosine similarity\nfunction cosineSimilarity(a, b) {\n  let dot = 0.0;\n  let normA = 0.0;\n  let normB = 0.0;\n\n  for (let i = 0; i < a.length; i++) {\n    dot += a[i] * b[i];\n    normA += a[i] * a[i];\n    normB += b[i] * b[i];\n  }\n\n  normA = Math.sqrt(normA);\n  normB = Math.sqrt(normB);\n\n  if (normA === 0 || normB === 0) return 0;\n\n  return dot / (normA * normB);\n}\n\n// Calcular similitudes contra todos los chunks\nconst similarities = storedEmbeddings.map(chunkEmbedding =>\n  cosineSimilarity(queryEmbedding, chunkEmbedding)\n);\n\n// Normalizar [−1,1] → [0,1]\nconst normalizedSimilarities = similarities.map(s => (s + 1) / 2);\n\n// Score global (promedio)\nconst score =\n  normalizedSimilarities.reduce((acc, val) => acc + val, 0) /\n  normalizedSimilarities.length;\n\n// 🔥 (opcional pero MUY útil en RAG)\nconst ranked = normalizedSimilarities\n  .map((sim, index) => ({\n    index,\n    similarity: sim,\n    embedding: storedEmbeddings[index]\n  }))\n  .sort((a, b) => b.similarity - a.similarity);\n\n// Output\nreturn [\n  {\n    json: {\n      score,\n      similarities: normalizedSimilarities,\n      topK: ranked.slice(0, 5) // los 5 más parecidos\n    }\n  }\n];"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        80,
+        96,
         -1824
       ],
       "id": "d2bedd8e-e0d3-4086-81be-57bb4302fb10",
@@ -968,6 +898,8 @@
     },
     {
       "parameters": {
+        "chatId": "={{$('Telegram Trigger').item.json.message.chat.id}}",
+        "text": "={{ $('Send a message').item.json.data?.text || \"no pudimos generar la respuesta\" }}",
         "additionalFields": {}
       },
       "type": "n8n-nodes-base.telegram",
@@ -984,22 +916,34 @@
           "id": "ParkL6SanSQxx3wo",
           "name": "Telegram account"
         }
-      },
-      "disabled": true
+      }
     },
     {
       "parameters": {
         "operation": "append",
         "documentId": {
           "__rl": true,
+          "value": "1nNsEbOcUbVidouZg2yOrEdkhEJGljCqeGt-r5HvEF-4",
           "mode": "list",
-          "value": ""
+          "cachedResultName": "odontologo error embendding",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1nNsEbOcUbVidouZg2yOrEdkhEJGljCqeGt-r5HvEF-4/edit?usp=drivesdk"
         },
         "sheetName": {
           "__rl": true,
+          "value": "gid=0",
           "mode": "list",
-          "value": ""
-        }
+          "cachedResultName": "Hoja 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1nNsEbOcUbVidouZg2yOrEdkhEJGljCqeGt-r5HvEF-4/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
       },
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
@@ -1014,14 +958,22 @@
           "id": "ZDc22wHfMLINIevk",
           "name": "Google Sheets account"
         }
-      },
-      "disabled": true
+      }
     },
     {
       "parameters": {
         "operation": "sendAndWait",
+        "sendTo": "maxi_rosanda@hotmail.com",
+        "subject": "Pedido de intervencion ",
+        "message": "=Pregunta: {{ $('Telegram Trigger').item.json.message.text }}\nfragmentos recuperados: {{ JSON.stringify($('Aggregate').item.json.data )}}",
         "responseType": "freeText",
-        "options": {}
+        "options": {
+          "limitWaitTime": {
+            "values": {
+              "resumeUnit": "minutes"
+            }
+          }
+        }
       },
       "type": "n8n-nodes-base.gmail",
       "typeVersion": 2.2,
@@ -1037,8 +989,7 @@
           "id": "eREIjaCT0HjVHozu",
           "name": "Gmail account"
         }
-      },
-      "disabled": true
+      }
     },
     {
       "parameters": {
@@ -1055,6 +1006,216 @@
       "typeVersion": 1,
       "id": "45ae09f6-d354-492c-8af9-09cd93c239d6",
       "name": "Sticky Note6"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        -80,
+        -1824
+      ],
+      "id": "071e6931-1f4e-4cbb-aa4d-3cddabd55c2f",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{$('Telegram Trigger').item.json.message?.text}}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "exists",
+                      "singleValue": true
+                    },
+                    "id": "0aab1f2c-9cae-416e-8884-0744da3f50f5"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": "={{ true }}",
+              "outputKey": "Text"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "372932ad-34f0-4a53-82b9-a2df8176dcb8",
+                    "leftValue": "={{$('Telegram Trigger').item.json.message.voice}}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "object",
+                      "operation": "exists",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Voice"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        -2640,
+        -1984
+      ],
+      "id": "59f35887-15d9-47b4-b089-d4f51a73135b",
+      "name": "Switch1"
+    },
+    {
+      "parameters": {
+        "url": "=https://api.telegram.org/bot8680647360:AAEM_-1vB1lFkRV6qh6obUAGabLb6SFBeuU/getFile",
+        "sendQuery": true,
+        "specifyQuery": "json",
+        "jsonQuery": "={\n  \"file_id\":\"{{$('Telegram Trigger').item.json.message.voice.file_id }}\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        -2416,
+        -1872
+      ],
+      "id": "85d4d89c-c910-4b69-8112-c05c9fae449d",
+      "name": "HTTP Request5"
+    },
+    {
+      "parameters": {
+        "url": "=https://api.telegram.org/file/bot8680647360:AAEM_-1vB1lFkRV6qh6obUAGabLb6SFBeuU/{{$('HTTP Request5').item.json.result.file_path}}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        -2256,
+        -1872
+      ],
+      "id": "057f74d9-f551-48bf-99eb-cc72436169b3",
+      "name": "HTTP Request6"
+    },
+    {
+      "parameters": {
+        "operation": "binaryToPropery",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1.1,
+      "position": [
+        -2080,
+        -1872
+      ],
+      "id": "7d202730-d36e-466f-80f5-753c6b3412f3",
+      "name": "Extract from File1"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"message\": {\n    \"text\":\"{{$json.candidates?.[0]?.content?.parts?.[0]?.text || $json.message?.text}}\"\n  },\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1600,
+        -2016
+      ],
+      "id": "5486b842-aa84-46cc-8983-1cea68013bcc",
+      "name": "Edit Fields2"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"contents\": [\n    {\n      \"parts\": [\n        {\n          \"text\": \"Transcribe exactamente el siguiente audio a texto. No agregues comentarios, solo la transcripción:\"\n        },\n        {\n          \"inlineData\": {\n            \"mimeType\": \"audio/ogg\",\n            \"data\": \"{{$('Extract from File1').item.json.data}}\"\n          }\n        }\n      ]\n    }\n  ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        -1904,
+        -1872
+      ],
+      "id": "8df2a6d6-4e80-4ad2-bbf1-be45009b7b17",
+      "name": "HTTP Request8",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "VEow3Vqr8LmqfJlP",
+          "name": "Header Auth Gemini"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-embedding-001"
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -1408,
+        -1808
+      ],
+      "id": "92f0cad0-53e3-428b-8f32-de2fa98a59d6",
+      "name": "Embeddings Google Gemini1",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "rc3IIqpQcDKATvsl",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "load",
+        "tableName": {
+          "__rl": true,
+          "value": "documents",
+          "mode": "list",
+          "cachedResultName": "documents"
+        },
+        "prompt": "={{$json.message.text}}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
+      "typeVersion": 1.3,
+      "position": [
+        -1408,
+        -2016
+      ],
+      "id": "e67c8963-8d20-4e60-a342-fae26ef9c1c3",
+      "name": "Supabase Vector Store2",
+      "credentials": {
+        "supabaseApi": {
+          "id": "OvjqC2Nun5s5rjYS",
+          "name": "Supabase account"
+        }
+      }
     }
   ],
   "pinData": {
@@ -1105,18 +1266,27 @@
         }
       }
     ],
+    "Send a message": [
+      {
+        "json": {
+          "data": {
+            "text": "dfsfsdfsd"
+          }
+        }
+      }
+    ],
     "Telegram Trigger": [
       {
         "json": {
-          "update_id": 507696323,
+          "update_id": 507696354,
           "message": {
-            "message_id": 12,
+            "message_id": 68,
             "from": {
               "id": 8722030592,
               "is_bot": false,
               "first_name": "Maximiliano",
               "last_name": "Rosanda",
-              "language_code": "es"
+              "language_code": "en"
             },
             "chat": {
               "id": 8722030592,
@@ -1124,16 +1294,15 @@
               "last_name": "Rosanda",
               "type": "private"
             },
-            "date": 1776811239,
-            "text": "¿Dónde se originó la odontología?"
+            "date": 1777077131,
+            "voice": {
+              "duration": 6,
+              "mime_type": "audio/ogg",
+              "file_id": "AwACAgEAAxkBAANEaewLi0w1UZ8KUbi5fGnSKLoyQ44AAhIGAAJWQ2hHY6BScZE_9HM7BA",
+              "file_unique_id": "AgADEgYAAlZDaEc",
+              "file_size": 38169
+            }
           }
-        }
-      }
-    ],
-    "AI Agent": [
-      {
-        "json": {
-          "output": "Según Cunha, la profesión odontológica nació en Mesopotamia."
         }
       }
     ]
@@ -1322,34 +1491,7 @@
       "main": [
         [
           {
-            "node": "Supabase Vector Store1",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Embeddings Google Gemini1": {
-      "ai_embedding": [
-        [
-          {
-            "node": "Supabase Vector Store1",
-            "type": "ai_embedding",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Supabase Vector Store1": {
-      "main": [
-        [
-          {
-            "node": "HTTP Request3",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "Aggregate",
+            "node": "Switch1",
             "type": "main",
             "index": 0
           }
@@ -1404,9 +1546,9 @@
       "main": [
         [
           {
-            "node": "Code in JavaScript6",
+            "node": "Merge",
             "type": "main",
-            "index": 0
+            "index": 1
           }
         ],
         [
@@ -1430,17 +1572,6 @@
         [
           {
             "node": "Append row in sheet",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Merge": {
-      "main": [
-        [
-          {
-            "node": "Code in JavaScript7",
             "type": "main",
             "index": 0
           }
@@ -1549,17 +1680,6 @@
         ]
       ]
     },
-    "Code in JavaScript6": {
-      "main": [
-        [
-          {
-            "node": "Merge",
-            "type": "main",
-            "index": 1
-          }
-        ]
-      ]
-    },
     "Code in JavaScript7": {
       "main": [
         [
@@ -1592,6 +1712,117 @@
           }
         ]
       ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript7",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "HTTP Request5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request5": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request6": {
+      "main": [
+        [
+          {
+            "node": "Extract from File1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File1": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request8",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields2": {
+      "main": [
+        [
+          {
+            "node": "Supabase Vector Store2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request8": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings Google Gemini1": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Supabase Vector Store2",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supabase Vector Store2": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "HTTP Request3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "active": true,
@@ -1599,7 +1830,7 @@
     "executionOrder": "v1",
     "binaryMode": "separate"
   },
-  "versionId": "dfc1c50e-f7d6-47d6-afed-50831a414233",
+  "versionId": "89455c1e-4756-4326-90b6-0d5d61d3fec9",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "c7b31977a1d8a788524451e091bfb2aa41fe01b91c4beac223ed036d4596a163"
